@@ -6,6 +6,6 @@
     <title>ログイン画面</title>
 </head>
 <body>
-    
+    <h1>ログイン</h1>
 </body>
 </html>
