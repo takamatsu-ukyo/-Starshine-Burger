@@ -6,6 +6,13 @@
     <title>ログイン画面</title>
 </head>
 <body>
-    <h1>ログイン</h1>
+    <h2>SSB</h2>
+    <h2>ログイン</h2>
+    <form action="home.php" method="post">
+    <p>メールアドレス<input type="email" name="mail" required pattern="^[a-zA-Z0-9._%+-]+@example\.com$"></p>
+    <p>パスワード<input type="password" name="password"required minlength="8"></p>
+    <button><a href="entry.php">新規登録</button>
+    <input type="submit" value="ログイン">
+    </form>
 </body>
 </html>
