@@ -8,7 +8,7 @@
 <body>
     <div class="bg-decor" aria-hidden="true">
         <div class="blob"></div>
-        <div call="blob b2"></div>
+        <div class="blob b2"></div>
     </div>
 
     <main class="card" role="main" aria-labelledby="logoutTitle">
@@ -21,7 +21,7 @@
         </div>
         <section class="field" style="text-align:center;">
             <p>再度ログインする場合は以下のボタンを押してください。</p>
-            <a href="lougin.php">
+            <a href="login.php">
                 <button type="button">ログイン画面に戻る</button>
             </a>
         </section>
