@@ -11,7 +11,7 @@
     <form action="home.php" method="post">
     <p>メールアドレス<input type="email" name="mail" required pattern="^[a-zA-Z0-9._%+-]+@example\.com$"></p>
     <p>パスワード<input type="password" name="password"required minlength="8"></p>
-    <button><a href="entry.php">新規登録</button>
+    <button type="button" onclick="location.href='entry.php'">新規登録</button>
     <input type="submit" value="ログイン">
     </form>
 </body>
