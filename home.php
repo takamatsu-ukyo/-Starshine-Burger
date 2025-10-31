@@ -1,5 +1,13 @@
-<?php session_start(); ?>
-<?php require 'db-connect.php';?>
+<?php session_start();
+require 'db-connect.php';
+if (isset($_POST['keyword'])) {
+    $_SESSION['keyword'] = $_POST['keyword'];
+}
+
+// セッションからキーワードを取得（なければ空文字）
+$keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -9,14 +17,11 @@
 </head>
 <body>
     <?php
-    unset($_SESSION['keyword'])
     echo '<h2>SSB</h2>';
     echo '<form method="POST" action="">';
     echo '<input type="text" name="keyword" value="',htmlspecialchars($keyword),'" placeholder="商品名を入力">';
     echo '<button type="submit">検索</button>';
     echo '</form>';
-    // キーワード取得（POST）
-    $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : '';
     ?>
     <p>タグから選ぶ：</p>
     <form method="POST" action="" id="tagForm">
@@ -34,10 +39,25 @@
   </script>
 
   <!-- 検索結果（例） -->
-  <?php if ($keyword): ?>
-    <h2>「<?= htmlspecialchars($keyword) ?>」の検索結果</h2>
-    <!-- 商品検索処理をここに追加 -->
-  <?php endif; ?>
+  <?php
+    if ($keyword) {
+    $pdo = new PDO($connect, USER, PASS);
+    $sql = $pdo->prepare('SELECT * FROM food_date WHERE food_name LIKE ?');
+    $sql->execute(['%' . $keyword . '%']);
+    $results = $sql->fetchAll();
+
+    if (empty($results)) {
+        echo '<p>該当する商品は見つかりませんでした。</p>';
+    } else {
+        echo '<ul>';
+        foreach ($results as $item) {
+            echo '<li>' . htmlspecialchars($item['food_name']) . ' - ' . htmlspecialchars($item['price']) . '円</li>';
+        }
+        echo '</ul>';
+        }
+    }
+  ?>
+
 
 </body>
 </html>
