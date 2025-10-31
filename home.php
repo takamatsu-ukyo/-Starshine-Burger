@@ -1,5 +1,7 @@
 <?php session_start();
 require 'db-connect.php';
+
+
 if (isset($_POST['keyword'])) {
     $_SESSION['keyword'] = $_POST['keyword'];
 }
@@ -38,11 +40,10 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
     }
   </script>
 
-  <!-- 検索結果（例） -->
   <?php
     if ($keyword) {
     $pdo = new PDO($connect, USER, PASS);
-    $sql = $pdo->prepare('SELECT * FROM food_date WHERE food_name LIKE ?');
+    $sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
     $sql->execute(['%' . $keyword . '%']);
     $results = $sql->fetchAll();
 
