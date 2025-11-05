@@ -28,6 +28,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
     <p>タグから選ぶ：</p>
     <form method="POST" action="" id="tagForm">
         <input type="hidden" name="keyword" id="tagKeyword">
+        <button type="button" onclick="submitTag('')">オススメ</button>
         <button type="button" onclick="submitTag('チーズ')">チーズ</button>
         <button type="button" onclick="submitTag('てりやき')">てりやき</button>
         <button type="button" onclick="submitTag('ポテト')">ポテト</button>
@@ -46,17 +47,31 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
     $sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
     $sql->execute(['%' . $keyword . '%']);
     $results = $sql->fetchAll();
-
     if (empty($results)) {
         echo '<p>該当する商品は見つかりませんでした。</p>';
-    } else {
-        echo '<ul>';
+    } else{
+        echo '<h2>関連する商品</h2>';
         foreach ($results as $item) {
-            echo '<li>' . htmlspecialchars($item['food_name']) . ' - ' . htmlspecialchars($item['price']) . '円</li>';
+          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円';
         }
-        echo '</ul>';
-        }
+      }
     }
+        $pdo = new PDO($connect, USER, PASS);
+        $sqlAll = $pdo->query('SELECT * FROM food_data');
+        $allResults = $sqlAll->fetchAll();
+
+        $flag=$pdo->query('SELECT * FROM food_data WHERE recommend_flag=1');
+        $recommend_flag = $flag->fetchAll();
+
+        echo '<h2>おすすめ商品</h2>';
+        foreach ($recommend_flag as $flags) {
+          echo htmlspecialchars($flags['food_name']) . '<br>' . htmlspecialchars($flags['price']) . '円';
+        }
+
+        echo '<h2>全ての商品一覧</h2>';
+        foreach ($allResults as $item) {
+          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円';
+        }
   ?>
 
 
