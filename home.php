@@ -1,13 +1,37 @@
-<?php session_start();
+<?php
+session_start();
 require 'db-connect.php';
 
-
-if (isset($_POST['keyword'])) {
-    $_SESSION['keyword'] = $_POST['keyword'];
+// リロード（GETアクセス）時は検索キーワードをクリア
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    unset($_SESSION['keyword']);
+    $keyword = '';
+} else {
+    // POSTされたらキーワードを保存
+    if (isset($_POST['keyword'])) {
+        $_SESSION['keyword'] = $_POST['keyword'];
+    }
+    $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
 }
 
-// セッションからキーワードを取得（なければ空文字）
-$keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
+$pdo = new PDO($connect, USER, PASS);
+
+// おすすめ商品
+$recommend_sql = $pdo->query('SELECT * FROM food_data WHERE recommend_flag = 1');
+$recommend_items = $recommend_sql->fetchAll();
+
+// 全商品
+$all_sql = $pdo->query('SELECT * FROM food_data');
+$all_items = $all_sql->fetchAll();
+
+// 検索処理
+$search_results = [];
+$searched = isset($_POST['keyword']);
+if ($searched) {
+    $search_sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
+    $search_sql->execute(['%' . $keyword . '%']);
+    $search_results = $search_sql->fetchAll();
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,6 +42,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
     <title>ホーム画面</title>
 </head>
 <body>
+<<<<<<< Updated upstream
     <?php
     echo '<h2>SSB</h2>';
     echo '<form method="POST" action="">';
@@ -32,15 +57,28 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
         <button type="button" onclick="submitTag('チーズ')">チーズ</button>
         <button type="button" onclick="submitTag('てりやき')">てりやき</button>
         <button type="button" onclick="submitTag('ポテト')">ポテト</button>
+=======
+    <h2>SSB</h2>
+    <form method="POST" action="">
+        <input type="text" name="keyword" id="keywordInput" value="<?= htmlspecialchars($keyword) ?>" placeholder="商品名を入力">
+        <button type="submit">検索</button>
+>>>>>>> Stashed changes
     </form>
 
-  <script>
-    function submitTag(tag) {
-      document.getElementById('tagKeyword').value = tag;
-      document.getElementById('tagForm').submit();
-    }
-  </script>
+    <p>タグから選ぶ：</p>
+    <div>
+        <button type="button" onclick="fillKeyword('チーズ')">チーズ</button>
+        <button type="button" onclick="fillKeyword('てりやき')">てりやき</button>
+        <button type="button" onclick="fillKeyword('ポテト')">ポテト</button>
+    </div>
 
+    <script>
+    function fillKeyword(tag) {
+        document.getElementById('keywordInput').value = tag;
+    }
+    </script>
+
+<<<<<<< Updated upstream
   <?php
     if ($keyword) {
     $pdo = new PDO($connect, USER, PASS);
@@ -73,7 +111,44 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
           echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円';
         }
   ?>
+=======
+    <!-- 検索結果 -->
+    <?php if ($searched): ?>
+        <h3>検索結果</h3>
+        <?php if (empty($keyword) || empty($search_results)): ?>
+            <p>該当する商品は見つかりませんでした。</p>
+        <?php else: ?>
+            <ul>
+                <?php foreach ($search_results as $item): ?>
+                    <li><?= htmlspecialchars($item['food_name']) ?> - <?= htmlspecialchars($item['price']) ?>円</li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    <?php endif; ?>
+>>>>>>> Stashed changes
 
+    <!-- おすすめ商品 -->
+    <h3>おすすめ商品</h3>
+    <?php if (!empty($recommend_items)): ?>
+        <ul>
+            <?php foreach ($recommend_items as $item): ?>
+                <li><?= htmlspecialchars($item['food_name']) ?> - <?= htmlspecialchars($item['price']) ?>円</li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p>おすすめ商品はありません。</p>
+    <?php endif; ?>
 
+    <!-- 全商品 -->
+    <h3>全商品一覧</h3>
+    <?php if (!empty($all_items)): ?>
+        <ul>
+            <?php foreach ($all_items as $item): ?>
+                <li><?= htmlspecialchars($item['food_name']) ?> - <?= htmlspecialchars($item['price']) ?>円</li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p>商品データがありません。</p>
+    <?php endif; ?>
 </body>
 </html>
