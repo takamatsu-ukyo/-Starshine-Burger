@@ -8,9 +8,9 @@
 <body>
     <?php
 session_start();
-require_once 'db.php';
+require_once 'db-connect.php';
 
-// カートに追加処理（home.php などからPOSTされた場合）
+// カート追加（home.php から飛んできたとき用）
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['food_id'])) {
     $food_id = (int)$_POST['food_id'];
 
@@ -21,17 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['food_id'])) {
     if ($food) {
         $_SESSION['cart'][] = $food;
     }
+    header('Location: index.php?page=cart');
+    exit;
 }
 
 // カート削除
 if (isset($_GET['remove'])) {
     $remove_id = (int)$_GET['remove'];
-    foreach ($_SESSION['cart'] ?? [] as $index => $item) {
+    foreach ($_SESSION['cart'] ?? [] as $i => $item) {
         if ($item['food_id'] == $remove_id) {
-            unset($_SESSION['cart'][$index]);
+            unset($_SESSION['cart'][$i]);
         }
     }
-    $_SESSION['cart'] = array_values($_SESSION['cart']);
+    $_SESSION['cart'] = array_values($_SESSION['cart']); // 配列再構成
     header('Location: index.php?page=cart');
     exit;
 }
@@ -41,7 +43,7 @@ $total = array_sum(array_column($cart, 'price'));
 ?>
 
 <div class="cart-container">
-  <h2>🛒 カート画面</h2>
+  <h2>🛒 カート</h2>
 
   <?php if (empty($cart)): ?>
     <p>カートに商品がありません。</p>
@@ -69,4 +71,4 @@ $total = array_sum(array_column($cart, 'price'));
   <?php endif; ?>
 </div>
 </body>
-</html>p
+</html>
