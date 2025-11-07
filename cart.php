@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['food_id'])) {
     if ($food) {
         $_SESSION['cart'][] = $food;
     }
-    header('Location: index.php?page=cart');
+    header('Location: home.php?page=cart');
     exit;
 }
 
@@ -34,7 +34,7 @@ if (isset($_GET['remove'])) {
         }
     }
     $_SESSION['cart'] = array_values($_SESSION['cart']); // 配列再構成
-    header('Location: index.php?page=cart');
+    header('Location: home.php?page=cart');
     exit;
 }
 
@@ -47,7 +47,7 @@ $total = array_sum(array_column($cart, 'price'));
 
   <?php if (empty($cart)): ?>
     <p>カートに商品がありません。</p>
-    <a href="index.php?page=home" class="btn">商品一覧へ</a>
+    <a href="home.php?page=home" class="btn">商品一覧へ</a>
   <?php else: ?>
     <table class="cart-table">
       <tr><th>商品名</th><th>価格</th><th></th></tr>
@@ -55,7 +55,7 @@ $total = array_sum(array_column($cart, 'price'));
         <tr>
           <td><?= htmlspecialchars($item['food_name']) ?></td>
           <td>¥<?= number_format($item['price']) ?></td>
-          <td><a href="index.php?page=cart&remove=<?= $item['food_id'] ?>" class="remove-btn">削除</a></td>
+          <td><a href="home.php?page=cart&remove=<?= $item['food_id'] ?>" class="remove-btn">削除</a></td>
         </tr>
       <?php endforeach; ?>
       <tr class="total-row">
@@ -66,7 +66,7 @@ $total = array_sum(array_column($cart, 'price'));
     </table>
 
     <div class="cart-actions">
-      <a href="index.php?page=checkout" class="btn">購入へ進む</a>
+      <a href="home.php?page=checkout" class="btn">購入へ進む</a>
     </div>
   <?php endif; ?>
 </div>
