@@ -1,5 +1,4 @@
 <?php session_start();
-require 'db-connect.php';
 
 
 if (isset($_POST['keyword'])) {
@@ -23,6 +22,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
     echo '<form method="POST" action="">';
     echo '<input type="text" name="keyword" value="',htmlspecialchars($keyword),'" placeholder="商品名を入力">';
     echo '<button type="submit">検索</button>';
+    echo '<a href="cart.php">カートへ</a>';
     echo '</form>';
     ?>
     <p>タグから選ぶ：</p>
@@ -42,8 +42,10 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
   </script>
 
   <?php
+    require_once 'db-connect.php';
+
     if ($keyword) {
-    $pdo = new PDO($connect, USER, PASS);
+    
     $sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
     $sql->execute(['%' . $keyword . '%']);
     $results = $sql->fetchAll();
@@ -61,7 +63,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
 
       }
     }
-        $pdo = new PDO($connect, USER, PASS);
+        
         $sqlAll = $pdo->query('SELECT * FROM food_data');
         $allResults = $sqlAll->fetchAll();
 
@@ -70,7 +72,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
 
         echo '<h2>おすすめ商品</h2>';
         foreach ($recommend_flag as $flags) {
-          echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" width="100"><br>';
+          echo '<img src="image/' . htmlspecialchars($flags['food_id']) . '.png" alt="' . htmlspecialchars($flags['food_name']) . '" width="100"><br>';
           echo htmlspecialchars($flags['food_name']) . '<br>' . htmlspecialchars($flags['price']) . '円<br>';
         }
 
