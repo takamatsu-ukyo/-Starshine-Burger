@@ -1,90 +1,77 @@
-<?php
-require 'db-connect.php';
+<?php session_start();
 
-// POST送信された場合のみ処理を実行
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $phone = $_POST['phone'] ?? '';
-    $password = $_POST['password'] ?? '';
-
-    // パスワードをハッシュ化
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    try {
-        $pdo = new PDO($connect, USER, PASS);
-        $sql = "INSERT INTO user (user_id, user_pass, user_name, tel) VALUES (:email, :password, :name, :phone)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':phone', $phone);
-        $stmt->bindParam(':password', $hashedPassword);
-        $stmt->execute();
-
-        // 登録成功 → ログイン画面へリダイレクト
-        header("Location: login.php");
-        exit;
-
-    } catch (PDOException $e) {
-        $error = "登録に失敗しました: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
-    }
+if (isset($_POST['keyword'])) {
+    $_SESSION['keyword'] = $_POST['keyword'];
 }
+
+// セッションからキーワードを取得（なければ空文字）
+$keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
 ?>
 
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>新規登録画面</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ホーム画面</title>
 </head>
 <body>
-  <div class="container mt-6">
-    <h2 class="title has-text-centered has-text-warning">SSB</h2>
-    <h2 class="subtitle has-text-centered has-text-warning">新規登録</h2>
-
-    <?php if (!empty($error)): ?>
-      <div class="notification is-danger has-text-centered">
-        <?= $error ?>
-      </div>
-    <?php endif; ?>
-
-    <form action="" method="POST" class="box">
-      <div class="field">
-        <label class="label">名前</label>
-        <div class="control">
-          <input type="text" name="name" required class="input">
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">メールアドレス</label>
-        <div class="control">
-          <input type="email" name="email" required class="input">
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">電話番号</label>
-        <div class="control">
-          <input type="text" name="phone" required class="input">
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">パスワード</label>
-        <div class="control">
-          <input type="password" name="password" required class="input">
-        </div>
-      </div>
-
-      <div class="field is-grouped is-grouped-centered">
-        <p class="control">
-          <input type="submit" value="登録完了" class="button is-primary">
-        </p>
-      </div>
+    <?php
+    echo '<h2>SSB</h2>';
+    echo '<form method="POST" action="">';
+    echo '<input type="text" name="keyword" value="',htmlspecialchars($keyword),'" placeholder="商品名を入力">';
+    echo '<button type="submit">検索</button>';
+    echo '</form>';
+    ?>
+    <p>タグから選ぶ：</p>
+    <form method="POST" action="" id="tagForm">
+        <input type="hidden" name="keyword" id="tagKeyword">
+        <button type="button" onclick="submitTag('')">オススメ</button>
+        <button type="button" onclick="submitTag('チーズ')">チーズ</button>
+        <button type="button" onclick="submitTag('てりやき')">てりやき</button>
+        <button type="button" onclick="submitTag('ポテト')">ポテト</button>
     </form>
-  </div>
+
+  <script>
+    function submitTag(tag) {
+      document.getElementById('tagKeyword').value = tag;
+      document.getElementById('tagForm').submit();
+    }
+  </script>
+
+  <?php
+    require 'db-connect.php';
+
+    if ($keyword) {
+    $sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
+    $sql->execute(['%' . $keyword . '%']);
+    $results = $sql->fetchAll();
+    if (empty($results)) {
+        echo '<p>該当する商品は見つかりませんでした。</p>';
+    } else{
+        echo '<h2>関連する商品</h2>';
+        foreach ($results as $item) {
+          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円';
+        }
+      }
+    }
+        $sqlAll = $pdo->query('SELECT * FROM food_data');
+        $allResults = $sqlAll->fetchAll();
+
+        $flag=$pdo->query('SELECT * FROM food_data WHERE recommend_flag=1');
+        $recommend_flag = $flag->fetchAll();
+
+        echo '<h2>おすすめ商品</h2>';
+        foreach ($recommend_flag as $flags) {
+          echo htmlspecialchars($flags['food_name']) . '<br>' . htmlspecialchars($flags['price']) . '円';
+        }
+
+        echo '<h2>全ての商品一覧</h2>';
+        foreach ($allResults as $item) {
+          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円';
+        }
+  ?>
+
+
 </body>
 </html>
