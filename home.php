@@ -52,8 +52,13 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
     } else{
         echo '<h2>関連する商品</h2>';
         foreach ($results as $item) {
-          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円';
+            echo '<div>';
+            echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" width="100"><br>';
+            echo '<strong>' . htmlspecialchars($item['food_name']) . '</strong><br>';
+            echo htmlspecialchars($item['price']) . '円<br>';
+            echo '</div>';
         }
+
       }
     }
         $pdo = new PDO($connect, USER, PASS);
@@ -65,14 +70,17 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
 
         echo '<h2>おすすめ商品</h2>';
         foreach ($recommend_flag as $flags) {
-          echo htmlspecialchars($flags['food_name']) . '<br>' . htmlspecialchars($flags['price']) . '円';
+          echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" width="100"><br>';
+          echo htmlspecialchars($flags['food_name']) . '<br>' . htmlspecialchars($flags['price']) . '円<br>';
         }
 
         echo '<h2>全ての商品一覧</h2>';
         foreach ($allResults as $item) {
-          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円';
+          echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" width="100"><br>';
+          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円<br>';
         }
   ?>
+
 
 
 </body>
