@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カート画面</title>
-</head>
-<body>
-    <?php
+<?php
 session_start();
 require_once 'db-connect.php';
-
 // カート追加（home.php から飛んできたとき用）
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['food_id'])) {
     $food_id = (int)$_POST['food_id'];
@@ -20,9 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['food_id'])) {
 
     if ($food) {
         $_SESSION['cart'][] = $food;
+        header('Location: cart.php');
+        exit;
     }
-    header('Location: home.php?page=cart');
-    exit;
 }
 
 // カート削除
@@ -34,14 +25,21 @@ if (isset($_GET['remove'])) {
         }
     }
     $_SESSION['cart'] = array_values($_SESSION['cart']); // 配列再構成
-    header('Location: home.php?page=cart');
+    header('Location: cart.php');
     exit;
-}
+  }
 
 $cart = $_SESSION['cart'] ?? [];
 $total = array_sum(array_column($cart, 'price'));
 ?>
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カート画面</title>
+</head>
+<body>
 <div class="cart-container">
   <h2>🛒 カート</h2>
 
@@ -66,7 +64,8 @@ $total = array_sum(array_column($cart, 'price'));
     </table>
 
     <div class="cart-actions">
-      <a href="home.php?page=checkout" class="btn">購入へ進む</a>
+      <a href="home.php?page=checkout" class="btn">購入へ進む</a><br>
+      <a href="home.php?page=home" class="btn">商品一覧へ</a>
     </div>
   <?php endif; ?>
 </div>
