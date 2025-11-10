@@ -36,9 +36,6 @@
         </p>
       </div>
     </form>
-    <div class="has-text-centered">
-      <img src = "img/SSBロゴ.png" alt = "SSBロゴ" style="display: block; margin: 20px auto 0; max-width: 200px;">
-    </div>
   </div>
 </body>
 </html>
