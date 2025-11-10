@@ -1,4 +1,30 @@
-<?php session_start();
+<?php
+session_start();
+require_once 'db-connect.php';
+
+if (isset($_POST['mail']) && isset($_POST['password'])) {
+    $mail = $_POST['mail'];
+    $password = $_POST['password'];
+
+    $sql = $pdo->prepare('SELECT * FROM user WHERE user_id = ?');
+    $sql->execute([$mail]);
+    $user = $sql->fetch();
+
+    if ($user && password_verify($password, $user['user_pass'])) {
+        $_SESSION['user'] = [
+            'id' => $user['user_id'],
+            'name' => $user['user_name'],
+            'tel' => $user['tel']
+        ];
+        // 認証成功 → 続行
+    } else {
+        echo '<script>alert("メールアドレスまたはパスワードが正しくありません。"); window.location.href = "login.php";</script>';
+        exit;
+    }
+}
+?>
+
+<?php
 
 
 if (isset($_POST['keyword'])) {
