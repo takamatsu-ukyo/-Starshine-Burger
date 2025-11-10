@@ -1,32 +1,5 @@
 <?php
 session_start();
-require_once 'db-connect.php';
-
-if (isset($_POST['mail']) && isset($_POST['password'])) {
-    $mail = $_POST['mail'];
-    $password = $_POST['password'];
-
-    $sql = $pdo->prepare('SELECT * FROM user WHERE user_id = ?');
-    $sql->execute([$mail]);
-    $user = $sql->fetch();
-
-    if ($user && password_verify($password, $user['user_pass'])) {
-        $_SESSION['user'] = [
-            'id' => $user['user_id'],
-            'name' => $user['user_name'],
-            'tel' => $user['tel']
-        ];
-        // 認証成功 → 続行
-    } else {
-        echo '<script>alert("メールアドレスまたはパスワードが正しくありません。"); window.location.href = "login.php";</script>';
-        exit;
-    }
-}
-?>
-
-<?php
-
-
 if (isset($_POST['keyword'])) {
     $_SESSION['keyword'] = $_POST['keyword'];
 }
@@ -231,11 +204,15 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
     } else{
         echo '<h2>関連する商品</h2>';
         foreach ($results as $item) {
-            echo '<div>';
-            echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" width="100"><br>';
-            echo '<strong>' . htmlspecialchars($item['food_name']) . '</strong><br>';
-            echo htmlspecialchars($item['price']) . '円<br>';
-            echo '</div>';
+          echo '<form method="post" action="cart.php">';
+          echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($item['food_id']) . '">';
+          echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($item['food_name']) . '">';
+          echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['price']) . '">';
+          echo '<button onclick="alert(\'カートに ',htmlspecialchars($item['food_name']),' を追加しました！\')" type="submit">';
+          echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" width="100"><br>';
+          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円<br>';
+          echo '</button>';
+          echo '</form>';
         }
 
       }
@@ -249,14 +226,28 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
 
         echo '<h2>おすすめ商品</h2>';
         foreach ($recommend_flag as $flags) {
+          echo '<form method="post" action="cart.php">';
+          echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($flags['food_id']) . '">';
+          echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($flags['food_name']) . '">';
+          echo '<input type="hidden" name="price" value="' . htmlspecialchars($flags['price']) . '">';
+          echo '<button onclick="alert(\'カートに ',htmlspecialchars($flags['food_name']),' を追加しました！\')" type="submit">';
           echo '<img src="image/' . htmlspecialchars($flags['food_id']) . '.png" alt="' . htmlspecialchars($flags['food_name']) . '" width="100"><br>';
           echo htmlspecialchars($flags['food_name']) . '<br>' . htmlspecialchars($flags['price']) . '円<br>';
+          echo '</button>';
+          echo '</form>';
         }
 
         echo '<h2>全ての商品一覧</h2>';
         foreach ($allResults as $item) {
+          echo '<form method="post" action="cart.php">';
+          echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($item['food_id']) . '">';
+          echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($item['food_name']) . '">';
+          echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['price']) . '">';
+          echo '<button onclick="alert(\'カートに ',htmlspecialchars($item['food_name']),' を追加しました！\')" type="submit">';
           echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" width="100"><br>';
           echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円<br>';
+          echo '</button>';
+          echo '</form>';
         }
   ?>
 
