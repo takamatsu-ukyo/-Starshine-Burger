@@ -147,6 +147,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
         .dropdown-menu a:hover {
             background-color: #f5f5f5;
         }
+    </style>
 </head>
 <body>
   <header>
