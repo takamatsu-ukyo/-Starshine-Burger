@@ -23,7 +23,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     <style>
         header {
             background-color: white;
-            padding: 15px 20px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -52,12 +52,12 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         }
 
         .logo img {
-            width: 80px;
+            width: 95px;
             height: auto;
         }
 
         .logo-text {
-            font-size: 100px;
+            font-size: 32px;
             font-weight: bold;
             color: #ff8c00;
         }
