@@ -21,7 +21,7 @@ $details = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 // 合計金額を計算
 $total = 0;
 foreach ($details as $item) {
-    $total += $item['price'] * $_POST["count"];
+    $total += $item['price'] * $_SESSION["quantity"];
 }
 ?>
 <!DOCTYPE html>
@@ -49,7 +49,7 @@ foreach ($details as $item) {
     <?php foreach ($details as $item): ?>
       <p>
         <?= htmlspecialchars($item['food_name']) ?>
-       ¥<?= number_format((int)$item['price'] * $_POST["count"]) ?>
+       ¥<?= number_format((int)$item['price'] * $_POST["quantity"]) ?>
       </p>
     <?php endforeach; ?>
   <?php else: ?>
