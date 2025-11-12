@@ -117,10 +117,11 @@ if (isset($_GET['decrease'])) {
     </table>
 
     <div class="cart-actions">
-      <a href="home.php?page=checkout" class="btn">購入へ進む</a>
+      <a href="buy_check.php?page=checkout" class="btn">購入へ進む</a>
       <a href="home.php?page=home" class="btn">商品一覧へ</a>
     </div>
   <?php endif; ?>
 </div>
 </body>
 </html>
+
