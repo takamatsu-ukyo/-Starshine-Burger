@@ -57,7 +57,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         }
 
         .logo-text {
-            font-size: 32px;
+            font-size: 100px;
             font-weight: bold;
             color: #ff8c00;
         }
@@ -168,7 +168,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         .dropdown-menu a:hover {
             background-color: #f5f5f5;
         }
-    </style>
+        </style>
 </head>
 <body>
   <iframe name="hiddenFrame" style="display:none;"></iframe>
@@ -282,5 +282,42 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
 
 
 
+   <script>
+        const menuButton = document.getElementById('menuButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const overlay = document.getElementById('overlay');
+
+        // メニューボタンのクリックイベント
+        menuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            menuButton.classList.toggle('active');
+            dropdownMenu.classList.toggle('show');
+            overlay.classList.toggle('show');
+        });
+
+        // オーバーレイクリックでメニューを閉じる
+        overlay.addEventListener('click', function() {
+            menuButton.classList.remove('active');
+            dropdownMenu.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+
+        // メニュー項目のクリック処理
+        function handleMenuClick(action) {
+            alert(action + 'が選択されました');
+            menuButton.classList.remove('active');
+            dropdownMenu.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+
+        // ドキュメント全体のクリックでメニューを閉じる
+        document.addEventListener('click', function(e) {
+            if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                menuButton.classList.remove('active');
+                dropdownMenu.classList.remove('show');
+                overlay.classList.remove('show');
+            }
+        });
+    </script>
 </body>
 </html>
