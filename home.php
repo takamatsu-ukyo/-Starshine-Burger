@@ -261,8 +261,6 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
           echo '</form>';
         }
   ?>
-</body>
-</html>
 
 
    <script>
