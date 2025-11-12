@@ -21,7 +21,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ホーム画面</title>
     <style>
-        header {
+      header {
             background-color: white;
             padding: 10px 20px;
             display: flex;
@@ -31,12 +31,10 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
             position: relative;
         }
 
-        .header-left,
-        .header-center,
-        .header-right {
-            flex: 1;
+        .logo-container {
             display: flex;
             align-items: center;
+            gap: 10px;
         }
 
         .header-left {
@@ -168,24 +166,20 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         .dropdown-menu a:hover {
             background-color: #f5f5f5;
         }
-        </style>
+    </style>
 </head>
 <body>
   <iframe name="hiddenFrame" style="display:none;"></iframe>
-    <header>
-        <div class="header-left">
+  <header>
+        <div class="logo-container">
+            <div class="logo"><img  src=img/SSBロゴ.png alt="SSBロゴ"></div>
             <div class="logo-text">SSB</div>
         </div>
+        
+        <a href="?menu=<?= $menu_open ? 'close' : 'open' ?>" class="menu-button <?= $menu_open ? 'active' : '' ?>" id="menuButton">
+        <span class="menu-icon"></span>
+        </a>
 
-        <div class="header-center">
-            <div class="logo"><img src="img/SSBロゴ.png" alt="SSBロゴ"></div>
-        </div>
-
-        <div class="header-right">
-            <a href="?menu=<?= $menu_open ? 'close' : 'open' ?>" class="menu-button <?= $menu_open ? 'active' : '' ?>" id="menuButton">
-            <span class="menu-icon"></span>
-            </a>
-        </div>
     </header>
     <?php if ($menu_open): ?>
         <div class="dropdown-menu show" id="dropdownMenu">
@@ -279,7 +273,6 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
           echo '</form>';
         }
   ?>
-
 
 
    <script>
