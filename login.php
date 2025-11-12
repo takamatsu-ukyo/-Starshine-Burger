@@ -34,15 +34,6 @@ if (isset($_POST['mail']) && isset($_POST['password'])) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 </head>
 <body>
-<<<<<<< HEAD
-    <h2>SSB</h2>
-    <h2>ログイン</h2>
-    <form action="home.php" method="post">
-    <p>メールアドレス<input type="email" name="mail" required pattern="^[a-zA-Z0-9._%+-]+@example\.com$"></p>
-    <p>パスワード<input type="password" name="password"required minlength="8"></p>
-    <button type="button" onclick="location.href='entry.php'">新規登録</button>
-    <input type="submit" value="ログイン">
-=======
   <div class="container mt-6">
     <h2 class="title has-text-centered" style="color: hsl(27, 82%, 51%)">SSB</h2>
     <h2 class="subtitle has-text-centered" style="color: hsl(27, 82%, 51%)">ログイン</h2>
@@ -70,7 +61,6 @@ if (isset($_POST['mail']) && isset($_POST['password'])) {
           <input type="submit" value="ログイン" class="button is-primary">
         </p>
       </div>
->>>>>>> main
     </form>
 
     <div class="has-text-centered">
