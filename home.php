@@ -6,6 +6,12 @@ if (isset($_POST['keyword'])) {
 
 // セッションからキーワードを取得（なければ空文字）
 $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
+
+// メニュー開閉の状態をセッションで管理
+if (isset($_GET['menu'])) {
+    $_SESSION['menu_open'] = ($_GET['menu'] === 'open');
+}
+$menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
 ?>
 
 <!DOCTYPE html>
@@ -106,6 +112,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
             display: none;
             z-index: 1000;
             min-width: 200px;
+            min-height: 100px;
         }
 
         .dropdown-menu.show {
@@ -150,24 +157,27 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
     </style>
 </head>
 <body>
+  <iframe name="hiddenFrame" style="display:none;"></iframe>
   <header>
         <div class="logo-container">
             <div class="logo"><img  src=img/SSBロゴ.png alt="SSBロゴ"></div>
             <div class="logo-text">SSB</div>
         </div>
         
-        <button class="menu-button" id="menuButton">
-            <span class="menu-icon"></span>
-        </button>
+        <a href="?menu=<?= $menu_open ? 'close' : 'open' ?>" class="menu-button <?= $menu_open ? 'active' : '' ?>" id="menuButton">
+        <span class="menu-icon"></span>
+        </a>
 
-        <!-- ドロップダウンメニュー -->
-        <div class="dropdown-menu" id="dropdownMenu">
-            <ul>
-                <li><a href="#" onclick="handleMenuClick('ユーザー情報')">・ユーザー情報</a></li>
-                <li><a href="#" onclick="handleMenuClick('ログアウト')">・ログアウト</a></li>
-            </ul>
-        </div>
     </header>
+    <?php if ($menu_open): ?>
+        <div class="dropdown-menu show" id="dropdownMenu">
+            <div class="menu">
+            <a href="user.php">ユーザー情報</a>
+            <a href="logout.php">ログアウト</a>
+            </div>
+        </div>
+<?php endif; ?>
+
     <?php
     echo '<h2>SSB</h2>';
     echo '<form method="POST" action="">';
@@ -205,7 +215,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
     } else{
         echo '<h2>関連する商品</h2>';
         foreach ($results as $item) {
-          echo '<form method="post" action="cart.php">';
+          echo '<form method="post" action="cart.php" target="hiddenFrame">';
           echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($item['food_id']) . '">';
           echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($item['food_name']) . '">';
           echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['price']) . '">';
@@ -227,7 +237,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
 
         echo '<h2>おすすめ商品</h2>';
         foreach ($recommend_flag as $flags) {
-          echo '<form method="post" action="cart.php">';
+          echo '<form method="post" action="cart.php" target="hiddenFrame">';
           echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($flags['food_id']) . '">';
           echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($flags['food_name']) . '">';
           echo '<input type="hidden" name="price" value="' . htmlspecialchars($flags['price']) . '">';
@@ -240,7 +250,7 @@ $keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
 
         echo '<h2>全ての商品一覧</h2>';
         foreach ($allResults as $item) {
-          echo '<form method="post" action="cart.php">';
+          echo '<form method="post" action="cart.php" target="hiddenFrame">';
           echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($item['food_id']) . '">';
           echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($item['food_name']) . '">';
           echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['price']) . '">';
