@@ -115,7 +115,7 @@ $quantity = count($cart);
 
     <?php foreach ($cart as $item): ?>
       <div class="item">
-        <img src="<?= htmlspecialchars($item['image_path'] ?? 'images/default.png') ?>" alt="<?= htmlspecialchars($item['food_name']) ?>">
+        <img src="<?= htmlspecialchars($item['image_path'] ?? 'image/'.htmlspecialchars($item['food_id']).'.png') ?>" alt="<?= htmlspecialchars($item['food_name']) ?>">
         <div class="item-info">
           <p><?= htmlspecialchars($item['food_name']) ?></p>
           <p>¥<?= number_format($item['price']) ?></p>
@@ -135,7 +135,7 @@ $quantity = count($cart);
       <p>商品数：<?= $quantity ?>個</p>
     </div>
 
-    <form action="home.php?page=checkout_complete" method="post">
+    <form action="buy_completed.php?page=checkout_complete" method="post">
       <button type="submit" class="btn">購入</button>
     </form>
   </div>
