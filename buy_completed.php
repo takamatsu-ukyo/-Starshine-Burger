@@ -17,6 +17,8 @@ $quantity = isset($_SESSION['quantity']) ? (int)$_SESSION['quantity'] : 1;
 
 // 合計金額を計算
 $total = (int)$order['price'] * $quantity;
+
+unset($_SESSION['quantity'], $_SESSION['cart']);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
