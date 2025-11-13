@@ -170,17 +170,22 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
 </head>
 <body>
   <iframe name="hiddenFrame" style="display:none;"></iframe>
-  <header>
-        <div class="logo-container">
-            <div class="logo"><img  src=img/SSBロゴ.png alt="SSBロゴ"></div>
-            <div class="logo-text">SSB</div>
-        </div>
-        
+    <header>
+    <div class="header-left">
+        <div class="logo-text">SSB</div>
+    </div>
+
+    <div class="header-center">
+        <div class="logo"><img src="img/SSBロゴ.png" alt="SSBロゴ"></div>
+    </div>
+
+    <div class="header-right">
         <a href="?menu=<?= $menu_open ? 'close' : 'open' ?>" class="menu-button <?= $menu_open ? 'active' : '' ?>" id="menuButton">
         <span class="menu-icon"></span>
         </a>
-
+    </div>
     </header>
+
     <?php if ($menu_open): ?>
         <div class="dropdown-menu show" id="dropdownMenu">
             <div class="menu">
