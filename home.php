@@ -263,36 +263,24 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         </style>
 </head>
 <body>
-<<<<<<< HEAD
-    <div class="main-container">
-=======
-  <iframe name="hiddenFrame" style="display:none;"></iframe>
->>>>>>> 30fd249a464be9755406e33f6dbf5dd280bbb52f
   <header>
         <div class="logo-container">
             <div class="logo"><img  src=img/SSBロゴ.png alt="SSBロゴ" class="logo"></div>
             <div class="logo-text">SSB</div>
         </div>
         
-        <a href="?menu=<?= $menu_open ? 'close' : 'open' ?>" class="menu-button <?= $menu_open ? 'active' : '' ?>" id="menuButton">
-        <span class="menu-icon"></span>
-        </a>
+        <button class="menu-button" id="menuButton">
+            <span class="menu-icon"></span>
+        </button>
 
-    </header>
-<<<<<<< HEAD
-
-    <div class="overlay" id="overlay"></div>
-=======
-    <?php if ($menu_open): ?>
-        <div class="dropdown-menu show" id="dropdownMenu">
-            <div class="menu">
-            <a href="user.php">ユーザー情報</a>
-            <a href="logout.php">ログアウト</a>
-            </div>
+        <!-- ドロップダウンメニュー -->
+        <div class="dropdown-menu" id="dropdownMenu">
+            <ul>
+                <li><a href="#" onclick="handleMenuClick('ユーザー情報')">・ユーザー情報</a></li>
+                <li><a href="#" onclick="handleMenuClick('ログアウト')">・ログアウト</a></li>
+            </ul>
         </div>
-<?php endif; ?>
->>>>>>> 30fd249a464be9755406e33f6dbf5dd280bbb52f
-
+    </header>
     <?php
     echo '<div class="search-container">
             <div class="search-box">'
