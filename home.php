@@ -259,6 +259,106 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
             width: 30px;
             height: 30px;
         }
+
+        /* 商品セクション全体 */
+.products-section {
+    padding: 20px;
+    width: 100%;
+}
+
+.products-section h2 {
+    text-align: center;
+    color: #ff8c00;
+    font-size: 24px;
+    margin: 30px 0 20px 0;
+    font-weight: bold;
+}
+
+/* 商品グリッドコンテナ */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+/* 商品カード */
+.product-card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* 商品フォーム（ボタン全体） */
+.product-card form {
+    width: 100%;
+    height: 100%;
+}
+
+.product-card button {
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    text-align: center;
+}
+
+/* 商品画像 */
+.product-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+}
+
+/* 商品情報 */
+.product-info {
+    padding: 15px;
+    text-align: center;
+}
+
+.product-name {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.product-price {
+    color: #ff8c00;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 600px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 901px) {
+    .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
         </style>
 </head>
 <body>
@@ -315,62 +415,97 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     require_once 'db-connect.php';
 
     if ($keyword) {
-    
     $sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
     $sql->execute(['%' . $keyword . '%']);
     $results = $sql->fetchAll();
+    
     if (empty($results)) {
-        echo '<p>該当する商品は見つかりませんでした。</p>';
-    } else{
+        echo '<div class="products-section">';
+        echo '<p style="text-align: center;">該当する商品は見つかりませんでした。</p>';
+        echo '</div>';
+    } else {
+        echo '<div class="products-section">';
         echo '<h2>関連する商品</h2>';
-        foreach ($results as $item) {
-          echo '<form method="post" action="cart.php" target="hiddenFrame">';
-          echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($item['food_id']) . '">';
-          echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($item['food_name']) . '">';
-          echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['price']) . '">';
-          echo '<button onclick="alert(\'カートに ',htmlspecialchars($item['food_name']),' を追加しました！\')" type="submit">';
-          echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" width="100"><br>';
-          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円<br>';
-          echo '</button>';
-          echo '</form>';
-        }
-
-      }
-    }
+        echo '<div class="products-grid">';
         
-        $sqlAll = $pdo->query('SELECT * FROM food_data');
-        $allResults = $sqlAll->fetchAll();
-
-        $flag=$pdo->query('SELECT * FROM food_data WHERE recommend_flag=1');
-        $recommend_flag = $flag->fetchAll();
-
-        echo '<h2>おすすめ商品</h2>';
-        foreach ($recommend_flag as $flags) {
-          echo '<form method="post" action="cart.php" target="hiddenFrame">';
-          echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($flags['food_id']) . '">';
-          echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($flags['food_name']) . '">';
-          echo '<input type="hidden" name="price" value="' . htmlspecialchars($flags['price']) . '">';
-          echo '<button onclick="alert(\'カートに ',htmlspecialchars($flags['food_name']),' を追加しました！\')" type="submit">';
-          echo '<img src="image/' . htmlspecialchars($flags['food_id']) . '.png" alt="' . htmlspecialchars($flags['food_name']) . '" width="100"><br>';
-          echo htmlspecialchars($flags['food_name']) . '<br>' . htmlspecialchars($flags['price']) . '円<br>';
-          echo '</button>';
-          echo '</form>';
+        foreach ($results as $item) {
+            echo '<div class="product-card">';
+            echo '<form method="post" action="cart.php" target="hiddenFrame">';
+            echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($item['food_id']) . '">';
+            echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($item['food_name']) . '">';
+            echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['price']) . '">';
+            echo '<button onclick="alert(\'カートに '.htmlspecialchars($item['food_name']).' を追加しました！\')" type="submit">';
+            echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '">';
+            echo '<div class="product-info">';
+            echo '<div class="product-name">' . htmlspecialchars($item['food_name']) . '</div>';
+            echo '<div class="product-price">' . htmlspecialchars($item['price']) . '円</div>';
+            echo '</div>';
+            echo '</button>';
+            echo '</form>';
+            echo '</div>';
         }
+        
+        echo '</div>';
+        echo '</div>';
+    }
+}
 
-        echo '<h2>全ての商品一覧</h2>';
-        foreach ($allResults as $item) {
-          echo '<form method="post" action="cart.php" target="hiddenFrame">';
-          echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($item['food_id']) . '">';
-          echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($item['food_name']) . '">';
-          echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['price']) . '">';
-          echo '<button onclick="alert(\'カートに ',htmlspecialchars($item['food_name']),' を追加しました！\')" type="submit">';
-          echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" width="100"><br>';
-          echo htmlspecialchars($item['food_name']) . '<br>' . htmlspecialchars($item['price']) . '円<br>';
-          echo '</button>';
-          echo '</form>';
-        }
-  ?>
+$sqlAll = $pdo->query('SELECT * FROM food_data');
+$allResults = $sqlAll->fetchAll();
 
+$flag = $pdo->query('SELECT * FROM food_data WHERE recommend_flag=1');
+$recommend_flag = $flag->fetchAll();
+
+// おすすめ商品
+echo '<div class="products-section">';
+echo '<h2>おすすめ商品</h2>';
+echo '<div class="products-grid">';
+
+foreach ($recommend_flag as $flags) {
+    echo '<div class="product-card">';
+    echo '<form method="post" action="cart.php" target="hiddenFrame">';
+    echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($flags['food_id']) . '">';
+    echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($flags['food_name']) . '">';
+    echo '<input type="hidden" name="price" value="' . htmlspecialchars($flags['price']) . '">';
+    echo '<button onclick="alert(\'カートに '.htmlspecialchars($flags['food_name']).' を追加しました！\')" type="submit">';
+    echo '<img src="image/' . htmlspecialchars($flags['food_id']) . '.png" alt="' . htmlspecialchars($flags['food_name']) . '">';
+    echo '<div class="product-info">';
+    echo '<div class="product-name">' . htmlspecialchars($flags['food_name']) . '</div>';
+    echo '<div class="product-price">' . htmlspecialchars($flags['price']) . '円</div>';
+    echo '</div>';
+    echo '</button>';
+    echo '</form>';
+    echo '</div>';
+}
+
+echo '</div>';
+echo '</div>';
+
+// 全ての商品一覧
+echo '<div class="products-section">';
+echo '<h2>全ての商品一覧</h2>';
+echo '<div class="products-grid">';
+
+foreach ($allResults as $item) {
+    echo '<div class="product-card">';
+    echo '<form method="post" action="cart.php" target="hiddenFrame">';
+    echo '<input type="hidden" name="food_id" value="' . htmlspecialchars($item['food_id']) . '">';
+    echo '<input type="hidden" name="food_name" value="' . htmlspecialchars($item['food_name']) . '">';
+    echo '<input type="hidden" name="price" value="' . htmlspecialchars($item['price']) . '">';
+    echo '<button onclick="alert(\'カートに '.htmlspecialchars($item['food_name']).' を追加しました！\')" type="submit">';
+    echo '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '">';
+    echo '<div class="product-info">';
+    echo '<div class="product-name">' . htmlspecialchars($item['food_name']) . '</div>';
+    echo '<div class="product-price">' . htmlspecialchars($item['price']) . '円</div>';
+    echo '</div>';
+    echo '</button>';
+    echo '</form>';
+    echo '</div>';
+}
+
+echo '</div>';
+echo '</div>';
+?>
 
    <script>
         const menuButton = document.getElementById('menuButton');
