@@ -48,7 +48,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         /* ヘッダー */
         header {
             background-color: white;
-            padding: 15px 20px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -506,7 +506,6 @@ foreach ($allResults as $item) {
 echo '</div>';
 echo '</div>';
 ?>
-
 
    <script>
         const menuButton = document.getElementById('menuButton');
