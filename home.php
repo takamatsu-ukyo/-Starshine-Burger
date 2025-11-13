@@ -21,7 +21,6 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ホーム画面</title>
     <style>
-      <style>
         * {
             margin: 0;
             padding: 0;
@@ -283,7 +282,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     </header>
     <?php
     echo '<div class="search-container">
-            <div class="search-box">'
+        <div class="search-box">';
     echo '<form method="POST" action="">';
     echo '<input type="text" name="keyword" id="searchInput" value="',htmlspecialchars($keyword),'" placeholder="商品名を入力">';
     echo '<button type="submit"  class="search-button">検索</button>';
