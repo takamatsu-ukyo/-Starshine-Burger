@@ -262,6 +262,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         </style>
 </head>
 <body>
+    <iframe name="hiddenFrame" style="display:none;"></iframe>
   <header>
         <div class="logo-container">
             <div class="logo"><img  src=img/SSBロゴ.png alt="SSBロゴ" class="logo"></div>
