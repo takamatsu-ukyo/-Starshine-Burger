@@ -40,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="container mt-6">
-    <h2 class="title has-text-centered has-text-warning">SSB</h2>
-    <h2 class="subtitle has-text-centered has-text-warning">新規登録</h2>
+    <h2 class="title has-text-centered" style="color: hsl(27, 82%, 51%)">SSB</h2>
+    <h2 class="subtitle has-text-centered" style="color: hsl(27, 82%, 51%)">新規登録</h2>
 
     <?php if (!empty($error)): ?>
       <div class="notification is-danger has-text-centered">
