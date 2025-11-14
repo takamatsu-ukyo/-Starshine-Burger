@@ -530,7 +530,16 @@ echo '</div>';
 
         // メニュー項目のクリック処理
         function handleMenuClick(action) {
-            alert(action + 'が選択されました');
+            if (action === 'ユーザー情報') {
+                <?php if (isset($_SESSION['user'])): ?>
+                window.location.href = 'user_update.php';
+                <?php else: ?>
+                alert('ログインが必要です。ログインしてください。');
+                <?php endif; ?>
+            } else if (action === 'ログアウト') {
+                window.location.href = 'logout.php';
+            }
+
             menuButton.classList.remove('active');
             dropdownMenu.classList.remove('show');
             overlay.classList.remove('show');
