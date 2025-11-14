@@ -2,23 +2,21 @@
 session_start();
 require 'db-connect.php';
 
-// 最新の購入（food_data）の1件を取得
-$sql = "SELECT * FROM food_data ORDER BY id DESC LIMIT 1";
-$stmt = $pdo->query($sql);
-$order = $stmt->fetch(PDO::FETCH_ASSOC);
+$cart = $_SESSION['cart'] ?? [];
 
-if (!$order) {
-    echo "注文が見つかりません。";
-    exit;
+if (empty($cart)) {
+  echo "注文が見つかりません。";
+  exit;
 }
 
-// 数量をセッションから取得（なければ1）
-$quantity = isset($_SESSION['quantity']) ? (int)$_SESSION['quantity'] : 1;
+$total = 0;
+$quantity = 0;
+foreach ($cart as $item) {
+  $total += $item['price'] * $item['quantity'];
+  $quantity += $item['quantity'];
+}
 
-// 合計金額を計算
-$total = (int)$order['price'] * $quantity;
-
-unset($_SESSION['quantity'], $_SESSION['cart']);
+unset($_SESSION['cart'], $_SESSION['quantity']);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -28,10 +26,6 @@ unset($_SESSION['quantity'], $_SESSION['cart']);
     <title>購入完了画面</title>
 </head>
 <body>
-
-  <!-- ② ×ボタン -->
-  <a href="home.php">×</a>
-
   <!-- ① ロゴ -->
   <h1>SSB</h1>
 
@@ -41,14 +35,15 @@ unset($_SESSION['quantity'], $_SESSION['cart']);
 
   <!-- ④ 注文内容 -->
   <h3>ご注文内容</h3>
-  <p>
-    <?= htmlspecialchars($order['food_name']) ?>　
-    <?= $quantity ?>点　
-    ¥<?= number_format((int)$order['price'] * $quantity) ?>
-  </p>
+  <?php foreach ($cart as $item): ?>
+    <p><?= htmlspecialchars($item['food_name']) ?> × <?= $item['quantity'] ?>個 ¥<?= number_format($item['price'] * $item['quantity']) ?></p>
+  <?php endforeach; ?>
+
 
   <!-- ⑤ 合計金額 -->
   <h3>合計：¥<?= number_format($total) ?></h3>
+
+   <a href="home.php">ホーム画面に戻る</a>
 
 </body>
 </html>
