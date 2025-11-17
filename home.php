@@ -253,6 +253,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             cursor: pointer;
+            z-index: 9999; /* 最前面にする */
         }
 
         .cart-icon img {
