@@ -41,7 +41,7 @@ $total = (int)$order['price'] * $quantity;
   <h3>ご注文内容</h3>
   <p>
     <?= htmlspecialchars($order['food_name']) ?>　
-    <?= $quantity ?>点　
+    <?= $quantity ?>点
     ¥<?= number_format((int)$order['price'] * $quantity) ?>
   </p>
 
