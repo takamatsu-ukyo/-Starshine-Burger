@@ -21,10 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $phone = $_POST['phone'] ?? '';
     $password = $_POST['password'] ?? '';
+    $password_confirm = $_POST['password_confirm'] ?? '';
 
     try {
-        // パスワードが入力されていればハッシュ化して更新
+        // パスワードチェック
         if (!empty($password)) {
+            if (strlen($password) < 8) {
+                throw new Exception("パスワードは8文字以上で入力してください。");
+            }
+            if ($password !== $password_confirm) {
+                throw new Exception("パスワードが確認用と一致しません。");
+            }
+
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $sql = "UPDATE user SET user_name = :name, tel = :phone, user_pass = :password WHERE user_id = :email";
             $stmt = $pdo->prepare($sql);
@@ -44,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user']['tel'] = $phone;
 
         $success = "更新が完了しました。";
+    } catch (Exception $e) {
+        $error = htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
     } catch (PDOException $e) {
         $error = "更新に失敗しました: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
     }
@@ -78,7 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="field">
         <label class="label">名前</label>
         <div class="control">
-          <input type="text" name="name" required class="input" value="<?= htmlspecialchars($name, ENT_QUOTES) ?>">
+          <input type="text" name="name" required class="input"
+                value="<?= htmlspecialchars($name ?? '', ENT_QUOTES) ?>">
         </div>
       </div>
 
@@ -92,14 +103,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="field">
         <label class="label">電話番号</label>
         <div class="control">
-          <input type="text" name="phone" required class="input" value="<?= htmlspecialchars($phone, ENT_QUOTES) ?>">
+          <input type="text" name="phone" required class="input"
+                value="<?= htmlspecialchars($phone ?? '', ENT_QUOTES) ?>">
         </div>
       </div>
 
       <div class="field">
-        <label class="label">新しいパスワード</label>
+        <label class="label">パスワード</label>
         <div class="control">
-          <input type="password" name="password" class="input" placeholder="変更する場合のみ入力">
+          <input type="password" name="password" required class="input" minlength="8">
+        </div>
+        <p class="help">8文字以上で入力してください</p>
+      </div>
+
+      <div class="field">
+        <label class="label">パスワード再入力</label>
+        <div class="control">
+          <input type="password" name="password_confirm" required class="input" minlength="8">
         </div>
       </div>
 
