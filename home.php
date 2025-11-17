@@ -387,7 +387,12 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     echo '<form method="POST" action="">';
     echo '<input type="text" name="keyword" id="searchInput" value="',htmlspecialchars($keyword),'" placeholder="商品名を入力">';
     echo '<button type="submit"  class="search-button">検索</button>';
-    echo '<div class="cart-icon"><a href="cart.php"><img src="img/カートのアイコン素材.png" alt="カートアイコン"></a></div>';
+    echo '<div class="cart-icon">
+            <a href="cart.php">
+                <img src="img/cart-icon.png" alt="カートアイコン">
+            </a>
+            </div>
+            ';
     echo '</form>';
     echo '</div>
           </div>';
