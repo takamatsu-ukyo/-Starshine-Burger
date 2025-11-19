@@ -1,4 +1,18 @@
-<?php require 'db-connect.php';?>
+<?php 
+session_start();
+if (isset($_POST['keyword'])) {
+    $_SESSION['keyword'] = $_POST['keyword'];
+}
+
+require_once 'db-connect.php';
+
+// セッションからキーワードを取得（なければ空文字）
+$keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
+
+$sql = "SELECT food_id, food_name FROM food_data";
+$stmt = $pdo->query($sql);
+$foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -13,8 +27,12 @@
 </div>
 
 <div class="search-area">
-  <input type="text" id="searchInput" placeholder="検索">
-  <button id="searchBtn">検索</button>
+    <?php
+    echo '<form method="POST" action="">';
+    echo '<input type="text" name="keyword" id="searchInput" value="',htmlspecialchars($keyword),'" placeholder="商品名を入力">';
+    echo '<button type="submit"  class="search-button">検索</button>';
+    echo '</form>'
+    ?>
 </div>
 
 <div class="sales-btn-area">
@@ -25,39 +43,59 @@
 
 <p class="tag" id="searchTag"></p>
 
-<!--商品表示枠組み-->
-<div class="products">
 <?php
-// 検索キーワード取得
-$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : "";
 
-// キーワードがあるときだけ検索実行
-if ($keyword !== "") {
-    $sql = "SELECT * FROM food_data WHERE name LIKE :keyword ORDER BY id DESC";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(":keyword", "%{$keyword}%", PDO::PARAM_STR);
-    $stmt->execute();
-    $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if (count($foods) === 0) {
-        echo "<p>該当する商品がありません。</p>";
+    if ($keyword) {
+    $sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
+    $sql->execute(['%' . $keyword . '%']);
+    $results = $sql->fetchAll();
+    
+    if (empty($results)) {
+        echo '<div class="products-section">';
+        echo '<p style="text-align: center;">該当する商品は見つかりませんでした。</p>';
+        echo '</div>';
     } else {
-        foreach ($foods as $food) {
+        echo '<div class="products-section">';
+        echo '<h2>関連する商品</h2>';
+        echo '<div class="products-grid">';
+        
+        foreach ($results as $item) {
             echo '<div class="product">';
-            echo '  <div class="product-title">';
-            echo '    <h2>' . htmlspecialchars($food['name']) . '</h2>';
-            echo '    <a href="sales_detail.php?id=' . htmlspecialchars($food['id']) . '" class="icon-button" title="個別売上を見る">📅</a>';
-            echo '  </div>';
-            echo '  <div class="product-img">';
-            echo '    <img src="' . htmlspecialchars($food['image_path']) . '" alt="' . htmlspecialchars($food['name']) . '">';
-            echo '  </div>';
+            echo  '<div class="product-title">';
+            echo   '<a href="individual_sales.php?food_id=' . urlencode($item['food_id']) . '" class="icon-button" title="個別売上を見る">';
+            echo     htmlspecialchars($item['food_name']);
+            echo   '</a>';
+            echo  '</div>';
+            echo  '<a href="individual_sales.php?food_id=' . urlencode($item['food_id']) . '">';
+            echo   '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" style="width:150px;height:auto;">';
+            echo  '</a>';
             echo '</div>';
+
         }
     }
-} else {
-    echo "<p>検索キーワードを入力してください。</p>";
 }
+
+$sqlAll = $pdo->query('SELECT * FROM food_data');
+$allResults = $sqlAll->fetchAll();
+
+$flag = $pdo->query('SELECT * FROM food_data WHERE recommend_flag=1');
+$recommend_flag = $flag->fetchAll();
 ?>
+<!--商品表示枠組み-->
+<h2>商品一覧</h2>
+<div class="products">
+  <?php foreach ($foods as $food): ?>
+    <div class="product">
+      <div class="product-title">
+        <a href="individual_sales.php?food_id=<?= urlencode($food['food_id']) ?>" class="icon-button" title="個別売上を見る">
+          <?= htmlspecialchars($food['food_name']) ?>
+        </a>
+      </div>
+      <a href="individual_sales.php?food_id=<?= urlencode($food['food_id']) ?>">
+        <img src="image/<?= htmlspecialchars($food['food_id']) ?>.png" alt="<?= htmlspecialchars($food['food_name']) ?>" style="width:150px;height:auto;">
+      </a>
+    </div>
+  <?php endforeach; ?>
 </div>
 
 <script>
