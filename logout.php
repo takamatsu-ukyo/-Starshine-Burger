@@ -1,4 +1,10 @@
-<?php require 'db-connect.php';?>
+<?php
+session_start();
+$_SESSION = [];
+session_destroy();
+
+require 'db-connect.php';
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
