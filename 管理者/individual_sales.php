@@ -9,7 +9,7 @@ if (!isset($_GET['food_id'])) {
 $food_id = $_GET['food_id'];
 
 // 商品名取得（タイトル用）
-$sql_name = "SELECT food_name FROM food_date WHERE food_id = ?";
+$sql_name = "SELECT food_name FROM food_data WHERE food_id = ?";
 $stmt = $pdo->prepare($sql_name);
 $stmt->execute([$food_id]);
 $food = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,7 +23,7 @@ $sql = "
         purchase_date,
         number,
         proceeds
-    FROM proceeds_date
+    FROM proceeds_data
     WHERE food_id = ?
     ORDER BY purchase_date DESC
 ";
@@ -31,13 +31,27 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([$food_id]);
 $productSales = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$sql_total_item = "
+    SELECT
+        SUM(number) AS total_count_item,
+        SUM(proceeds) AS total_sales_item
+    FROM proceeds_data
+    WHERE food_id = ?
+";
+$stmt = $pdo->prepare($sql_total_item);
+$stmt->execute([$food_id]);
+$totalItem = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$total_count_item = $totalItem['total_count_item'] ?? 0;
+$total_sales_item = $totalItem['total_sales_item'] ?? 0;
+
 
 // 総合売上を取得（販売総数 / 総売上金額）
 $sql_total_all = "
     SELECT
         SUM(number) AS total_count_all,
         SUM(proceeds) AS total_sales_all
-    FROM proceeds_date
+    FROM proceeds_data
 ";
 $stmt = $pdo->query($sql_total_all);
 $totalAll = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -89,7 +103,7 @@ $total_sales_all = $totalAll['total_sales_all'] ?? 0;
 </head>
 <body>
 
-<a href="sales.php" class="back-btn">← 戻る</a>
+<a href="manager_home.php" class="back-btn">← 戻る</a>
 
 <h2><?= htmlspecialchars($food_name) ?> の売上一覧</h2>
 
@@ -116,10 +130,11 @@ $total_sales_all = $totalAll['total_sales_all'] ?? 0;
 
 <!-- 売上 ▼ -->
 <div class="total-all-box">
-    <h2>全商品の総合売上</h2>
-    <p>販売総数：<?= number_format($total_count_all) ?> 個</p>
-    <p>総売上金額：¥<?= number_format($total_sales_all) ?></p>
+    <h2><?= htmlspecialchars($food_name) ?> の合計売上</h2>
+    <p>販売総数：<?= number_format($total_count_item) ?> 個</p>
+    <p>総売上金額：¥<?= number_format($total_sales_item) ?></p>
 </div>
+
 
 
 </body>
