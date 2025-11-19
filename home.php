@@ -389,12 +389,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     echo '<form method="POST" action="">';
     echo '<input type="text" name="keyword" id="searchInput" value="',htmlspecialchars($keyword),'" placeholder="商品名を入力">';
     echo '<button type="submit"  class="search-button">検索</button>';
-    echo '<div class="cart-icon">
-            <a href="cart.php">
-                <img src="img/cart-icon.png" alt="カートアイコン">
-            </a>
-            </div>
-            ';
+    echo '<div class="cart-icon"><a href="cart.php"><img src="img/カートのアイコン素材.png" alt="カートアイコン"></a></div>';
     echo '</form>';
     echo '</div>
           </div>';
@@ -537,18 +532,31 @@ echo '</div>';
 
         // メニュー項目のクリック処理
         function handleMenuClick(action) {
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+            alert(action + 'が選択されました');
+=======
+=======
+>>>>>>> main
             if (action === 'ユーザー情報') {
                 <?php if (isset($_SESSION['user'])): ?>
                 window.location.href = 'user_update.php';
                 <?php else: ?>
                 alert('ログインが必要です。ログインしてください。');
                 <?php endif; ?>
+<<<<<<< HEAD
+=======
             } else if (action === 'ログイン') {
                 window.location.href = 'login.php';
+>>>>>>> main
             } else if (action === 'ログアウト') {
                 window.location.href = 'logout.php';
             }
 
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
             menuButton.classList.remove('active');
             dropdownMenu.classList.remove('show');
             overlay.classList.remove('show');
