@@ -27,15 +27,37 @@
 
 <!--商品表示枠組み-->
 <div class="products">
+<?php
+// 検索キーワード取得
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : "";
 
-  <div class="product">
-    <div class="product-title">
-      <a href="" class="icon-button" title="個別売上を見る">📅</a>
-    </div>
-    
-    <img src="">
-  </div>
+// キーワードがあるときだけ検索実行
+if ($keyword !== "") {
+    $sql = "SELECT * FROM food_data WHERE name LIKE :keyword ORDER BY id DESC";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(":keyword", "%{$keyword}%", PDO::PARAM_STR);
+    $stmt->execute();
+    $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    if (count($foods) === 0) {
+        echo "<p>該当する商品がありません。</p>";
+    } else {
+        foreach ($foods as $food) {
+            echo '<div class="product">';
+            echo '  <div class="product-title">';
+            echo '    <h2>' . htmlspecialchars($food['name']) . '</h2>';
+            echo '    <a href="sales_detail.php?id=' . htmlspecialchars($food['id']) . '" class="icon-button" title="個別売上を見る">📅</a>';
+            echo '  </div>';
+            echo '  <div class="product-img">';
+            echo '    <img src="' . htmlspecialchars($food['image_path']) . '" alt="' . htmlspecialchars($food['name']) . '">';
+            echo '  </div>';
+            echo '</div>';
+        }
+    }
+} else {
+    echo "<p>検索キーワードを入力してください。</p>";
+}
+?>
 </div>
 
 <script>

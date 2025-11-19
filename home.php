@@ -378,6 +378,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         <div class="dropdown-menu" id="dropdownMenu">
             <ul>
                 <li><a href="#" onclick="handleMenuClick('ユーザー情報')">・ユーザー情報</a></li>
+                <li><a href="#" onclick="handleMenuClick('ログイン')">・ログイン</a></li>
                 <li><a href="#" onclick="handleMenuClick('ログアウト')">・ログアウト</a></li>
             </ul>
         </div>
@@ -531,20 +532,31 @@ echo '</div>';
 
         // メニュー項目のクリック処理
         function handleMenuClick(action) {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
             alert(action + 'が選択されました');
 =======
+=======
+>>>>>>> main
             if (action === 'ユーザー情報') {
                 <?php if (isset($_SESSION['user'])): ?>
                 window.location.href = 'user_update.php';
                 <?php else: ?>
                 alert('ログインが必要です。ログインしてください。');
                 <?php endif; ?>
+<<<<<<< HEAD
+=======
+            } else if (action === 'ログイン') {
+                window.location.href = 'login.php';
+>>>>>>> main
             } else if (action === 'ログアウト') {
                 window.location.href = 'logout.php';
             }
 
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> main
             menuButton.classList.remove('active');
             dropdownMenu.classList.remove('show');
             overlay.classList.remove('show');
