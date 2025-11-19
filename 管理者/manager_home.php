@@ -72,11 +72,11 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo '</div>';
 
         }
+        echo '</div>'; 
+        echo '</div>'; 
+
     }
 }
-
-$sqlAll = $pdo->query('SELECT * FROM food_data');
-$allResults = $sqlAll->fetchAll();
 
 $flag = $pdo->query('SELECT * FROM food_data WHERE recommend_flag=1');
 $recommend_flag = $flag->fetchAll();
