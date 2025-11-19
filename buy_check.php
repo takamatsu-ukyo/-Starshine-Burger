@@ -10,8 +10,12 @@ if (empty($cart)) {
   exit;
 }
 
-$total = array_sum(array_column($cart, 'price'));
-$quantity = count($cart);
+$total = 0;
+foreach ($cart as $item) {
+  $total += $item['price'] * $item['quantity'];
+}
+
+$quantity = array_sum(array_column($cart, 'quantity'));
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -115,11 +119,13 @@ $quantity = count($cart);
 
     <?php foreach ($cart as $item): ?>
       <div class="item">
-        <img src="<?= htmlspecialchars($item['image_path'] ?? 'image/'.htmlspecialchars($item['food_id']).'.png') ?>" alt="<?= htmlspecialchars($item['food_name']) ?>">
-        <div class="item-info">
-          <p><?= htmlspecialchars($item['food_name']) ?></p>
-          <p>¥<?= number_format($item['price']) ?></p>
-        </div>
+        <?php if ($item['quantity'] != 0): ?>
+          <img src="<?= htmlspecialchars($item['image_path'] ?? 'image/'.htmlspecialchars($item['food_id']).'.png') ?>" alt="<?= htmlspecialchars($item['food_name']) ?>">
+          <div class="item-info">
+            <p><?= htmlspecialchars($item['food_name']) ?></p>
+            <p>¥<?= number_format($item['price']) ?> × <?= $item['quantity'] ?>個</p>
+          </div>
+        <?php endif; ?>
       </div>
     <?php endforeach; ?>
 
@@ -137,6 +143,9 @@ $quantity = count($cart);
 
     <form action="buy_completed.php?page=checkout_complete" method="post">
       <button type="submit" class="btn">購入</button>
+    </form>
+    <form action="cart.php?page=checkout_complete" method="post">
+      <button type="submit" class="btn">カート画面へ</button>
     </form>
   </div>
 </body>
