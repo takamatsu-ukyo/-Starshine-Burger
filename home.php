@@ -378,6 +378,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         <div class="dropdown-menu" id="dropdownMenu">
             <ul>
                 <li><a href="#" onclick="handleMenuClick('ユーザー情報')">・ユーザー情報</a></li>
+                <li><a href="#" onclick="handleMenuClick('ログイン')">・ログイン</a></li>
                 <li><a href="#" onclick="handleMenuClick('ログアウト')">・ログアウト</a></li>
             </ul>
         </div>
@@ -542,6 +543,8 @@ echo '</div>';
                 <?php else: ?>
                 alert('ログインが必要です。ログインしてください。');
                 <?php endif; ?>
+            } else if (action === 'ログイン') {
+                window.location.href = 'login.php';
             } else if (action === 'ログアウト') {
                 window.location.href = 'logout.php';
             }
