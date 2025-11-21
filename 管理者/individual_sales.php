@@ -7,6 +7,23 @@ if (!isset($_GET['food_id'])) {
 }
 
 $food_id = $_GET['food_id'];
+$from = $_GET['from'] ?? null;
+$to = $_GET['to'] ?? null;
+
+$where = "WHERE food_id = ?";
+$params = [$food_id];
+
+if ($from && $to) {
+    $where .= " AND purchase_date BETWEEN ? AND ?";
+    $params[] = $from;
+    $params[] = $to;
+} elseif ($from) {
+    $where .= " AND purchase_date >= ?";
+    $params[] = $from;
+} elseif ($to) {
+    $where .= " AND purchase_date <= ?";
+    $params[] = $to;
+}
 
 // 商品名取得（タイトル用）
 $sql_name = "SELECT food_name FROM food_data WHERE food_id = ?";
@@ -24,12 +41,13 @@ $sql = "
         number,
         proceeds
     FROM proceeds_data
-    WHERE food_id = ?
+    $where
     ORDER BY purchase_date DESC
 ";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$food_id]);
+$stmt->execute($params);
 $productSales = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 $sql_total_item = "
     SELECT
@@ -59,7 +77,11 @@ $totalAll = $stmt->fetch(PDO::FETCH_ASSOC);
 $total_count_all = $totalAll['total_count_all'] ?? 0;
 $total_sales_all = $totalAll['total_sales_all'] ?? 0;
 
+
+
+
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -106,6 +128,15 @@ $total_sales_all = $totalAll['total_sales_all'] ?? 0;
 <a href="manager_home.php" class="back-btn">← 戻る</a>
 
 <h2><?= htmlspecialchars($food_name) ?> の売上一覧</h2>
+
+<form method="get" action="">
+  <input type="hidden" name="food_id" value="<?= htmlspecialchars($food_id) ?>">
+  <label for="from">開始日：</label>
+  <input type="date" name="from" id="from" value="<?= htmlspecialchars($_GET['from'] ?? '') ?>">
+  <label for="to">終了日：</label>
+  <input type="date" name="to" id="to" value="<?= htmlspecialchars($_GET['to'] ?? '') ?>">
+  <button type="submit">絞り込む</button>
+</form>
 
 <table>
     <tr>
