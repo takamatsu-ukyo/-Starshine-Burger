@@ -54,14 +54,15 @@ $sql_total_item = "
         SUM(number) AS total_count_item,
         SUM(proceeds) AS total_sales_item
     FROM proceeds_data
-    WHERE food_id = ?
+    $where
 ";
 $stmt = $pdo->prepare($sql_total_item);
-$stmt->execute([$food_id]);
+$stmt->execute($params);
 $totalItem = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $total_count_item = $totalItem['total_count_item'] ?? 0;
 $total_sales_item = $totalItem['total_sales_item'] ?? 0;
+
 
 
 // 総合売上を取得（販売総数 / 総売上金額）
