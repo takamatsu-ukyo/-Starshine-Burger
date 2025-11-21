@@ -11,9 +11,32 @@ if (empty($cart)) {
 
 $total = 0;
 $quantity = 0;
-foreach ($cart as $item) {
-  $total += $item['price'] * $item['quantity'];
-  $quantity += $item['quantity'];
+$today = date('Y-m-d');
+
+// 購入情報を proceeds_data に登録
+try {
+  $pdo->beginTransaction();
+
+  foreach ($cart as $item) {
+    if ($item['quantity'] > 0) {
+      $stmt = $pdo->prepare('INSERT INTO proceeds_data (food_id, purchase_date, number, proceeds) VALUES (:food_id, :purchase_date, :number, :proceeds)');
+      $stmt->execute([
+        ':food_id' => $item['food_id'],
+        ':purchase_date' => $today,
+        ':number' => $item['quantity'],
+        ':proceeds' => $item['price'] * $item['quantity']
+      ]);
+    }
+
+    $total += $item['price'] * $item['quantity'];
+    $quantity += $item['quantity'];
+  }
+
+  $pdo->commit();
+} catch (Exception $e) {
+  $pdo->rollBack();
+  echo "購入処理中にエラーが発生しました: " . htmlspecialchars($e->getMessage());
+  exit;
 }
 
 unset($_SESSION['cart'], $_SESSION['quantity']);
@@ -39,11 +62,9 @@ unset($_SESSION['cart'], $_SESSION['quantity']);
     <p><?= htmlspecialchars($item['food_name']) ?> × <?= $item['quantity'] ?>個 ¥<?= number_format($item['price'] * $item['quantity']) ?></p>
   <?php endforeach; ?>
 
-
   <!-- ⑤ 合計金額 -->
   <h3>合計：¥<?= number_format($total) ?></h3>
 
-   <a href="home.php">ホーム画面に戻る</a>
-
+  <a href="home.php">ホーム画面に戻る</a>
 </body>
 </html>
