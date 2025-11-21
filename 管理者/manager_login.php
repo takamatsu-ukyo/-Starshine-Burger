@@ -1,4 +1,36 @@
-<?php require 'db-connect.php';?>
+<?php
+require 'db-connect.php';
+session_start();
+
+$error = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $id = $_POST['id'] ?? '';
+    $pass = $_POST['pass'] ?? '';
+
+    if ($id === "" || $pass === "") {
+        $error = "IDまたはパスワードを入力してください。";
+    } else {
+        $sql = "SELECT * FROM manager_data WHERE id = :id AND password = :password";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_STR);
+        $stmt->bindValue(':password', $pass, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $user = $stmt->fetch();
+
+        if ($user) {
+            // ログイン成功 → manager_home.phpへ
+            $_SESSION['login'] = true;
+            $_SESSION['manager_id'] = $id; // 必要なら管理者IDを保持
+            header("Location: manager_home.php");
+            exit;
+        } else {
+            $error = "IDまたはパスワードが正しくありません。";
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -67,13 +99,23 @@
     button:hover {
       background-color: #d5691f;
     }
+    .error {
+      color: red;
+      margin-bottom: 15px;
+      font-size: 0.9em;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <div class="login-container">
     <h1>ログイン</h1>
 
-    <form action="#" method="post" onsubmit="event.preventDefault(); alert('送信処理は未実装です');">
+    <?php if ($error): ?>
+      <div class="error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
+    <?php endif; ?>
+
+    <form action="" method="post">
       <div class="field">
         <label for="id">ID</label>
         <input id="id" name="id" type="text" placeholder="Enter ID">
@@ -87,6 +129,5 @@
       <button type="submit">ログイン</button>
     </form>
   </div>
-
 </body>
 </html>
