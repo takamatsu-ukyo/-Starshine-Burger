@@ -141,25 +141,6 @@ if (isset($_GET['decrease'])) {
             gap: 10px;
         }
 
-        .search-input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .search-btn {
-            background: #ff8c42;
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
         .home-btn {
             display: inline-block;
             margin: 15px 20px;
