@@ -309,11 +309,6 @@ if (isset($_GET['decrease'])) {
         <img src="" alt="Menu" class="menu-icon">
     </div>
 
-    <div class="search-section">
-        <input type="text" class="search-input" placeholder="">
-        <button class="search-btn">検索</button>
-    </div>
-
     <a href="home.php?page=home" class="home-btn">ホーム</a>
 
     <div class="cart-container">
@@ -325,7 +320,7 @@ if (isset($_GET['decrease'])) {
         <?php else: ?>
             <?php foreach ($cart as $item): ?>
                 <div class="cart-item">
-                    <img src="" alt="<?= htmlspecialchars($item['food_name']) ?>" class="item-image">
+                    <img src="image/<?= htmlspecialchars($flags['food_id']) ?>.png" alt="<?= htmlspecialchars($item['food_name']) ?>" class="item-image">
                     <div class="item-info">
                         <div class="item-name"><?= htmlspecialchars($item['food_name']) ?></div>
                         <div class="item-price">¥<?= number_format($item['price']) ?></div>
