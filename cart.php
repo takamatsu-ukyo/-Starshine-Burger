@@ -174,7 +174,6 @@ if (isset($_GET['decrease'])) {
         }
 
         .item-image {
-            width: 100%;
             height: 150px;
             background: #ddd;
             border-radius: 10px;
