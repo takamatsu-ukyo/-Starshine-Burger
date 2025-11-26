@@ -303,10 +303,9 @@ if (isset($_GET['decrease'])) {
 <body>
     <div class="header">
         <div class="logo-section">
-            <img src="" alt="Logo" class="logo-icon">
+            <img src="img/SSBロゴ.png" alt="Logo" class="logo-icon">
             <div class="logo-text">SSB</div>
         </div>
-        <img src="" alt="Menu" class="menu-icon">
     </div>
 
     <a href="home.php?page=home" class="home-btn">ホーム</a>
