@@ -2,6 +2,9 @@
 session_start();
 require_once 'db-connect.php';
 
+$isLoggedIn = isset($_SESSION['user_id']);
+
+
 // カート追加（home.php から飛んできたとき用）
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['food_id'])) {
     $food_id = (int)$_POST['food_id'];
@@ -327,12 +330,14 @@ if (isset($_GET['decrease'])) {
                     <span>商品数：</span>
                     <span><?= $totalItems ?>個</span>
                 </div>
-                <?php if ($totalItems != 0): ?>
-                <a href="buy_check.php?page=checkout" class="checkout-btn">購入</a>
+
+                <?php if ($isLoggedIn): ?>
+                    <!-- ログイン済みなら購入画面へ -->
+                    <a href="buy_check.php?page=checkout" class="checkout-btn">購入</a>
                 <?php else: ?>
-                <script>
-                    alert("カートに商品がありません");
-                </script>
+                    <!-- 未ログインならメッセージ表示 -->
+                    <p style="color:red; font-weight:bold;">購入にはログインが必要です</p>
+                    <a href="login.php" class="checkout-btn">ログイン画面へ</a>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
