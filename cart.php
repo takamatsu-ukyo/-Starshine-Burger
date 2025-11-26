@@ -320,7 +320,7 @@ if (isset($_GET['decrease'])) {
         <?php else: ?>
             <?php foreach ($cart as $item): ?>
                 <div class="cart-item">
-                    <img src="image/<?= htmlspecialchars($flags['food_id']) ?>.png" alt="<?= htmlspecialchars($item['food_name']) ?>" class="item-image">
+                    <img src="image/<?= htmlspecialchars($item['food_id']) ?>.png" alt="<?= htmlspecialchars($item['food_name']) ?>" class="item-image">
                     <div class="item-info">
                         <div class="item-name"><?= htmlspecialchars($item['food_name']) ?></div>
                         <div class="item-price">¥<?= number_format($item['price']) ?></div>
