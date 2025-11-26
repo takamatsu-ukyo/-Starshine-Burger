@@ -97,7 +97,7 @@ if (isset($_GET['decrease'])) {
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f5f5f5;
         }
 
@@ -128,6 +128,7 @@ if (isset($_GET['decrease'])) {
             font-size: 32px;
             font-weight: bold;
             color: #ff8c00;
+            line-height: 50px;
         }
 
         .menu-icon {
