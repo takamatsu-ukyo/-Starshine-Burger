@@ -127,7 +127,7 @@ if (isset($_GET['decrease'])) {
         .logo-text {
             font-size: 32px;
             font-weight: bold;
-            color: #ff8c42;
+            color: #ff8c00;
         }
 
         .menu-icon {
