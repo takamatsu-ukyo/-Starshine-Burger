@@ -327,7 +327,13 @@ if (isset($_GET['decrease'])) {
                     <span>商品数：</span>
                     <span><?= $totalItems ?>個</span>
                 </div>
+                <?php if ($totalItems != 0): ?>
                 <a href="buy_check.php?page=checkout" class="checkout-btn">購入</a>
+                <?php else: ?>
+                <script>
+                    alert("カートに商品がありません");
+                </script>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     </div>
