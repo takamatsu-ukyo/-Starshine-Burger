@@ -75,6 +75,91 @@ $summary = $stmt->fetch();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>トータル売上</title>
+    <style>
+body {
+    font-family: "Yu Gothic", sans-serif;
+    background: #fafafa;
+    margin: 0;
+    padding: 0;
+}
+
+/* 見出し */
+h2 {
+    margin: 20px;
+    font-size: 24px;
+}
+
+/* フォーム */
+form {
+    background: #fff;
+    padding: 15px;
+    margin: 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+label {
+    margin-right: 10px;
+}
+
+input[type="date"] {
+    padding: 5px 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background: #ffb347; /* 画像と同じオレンジ */
+    color: #fff;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+button:hover {
+    opacity: 0.8;
+}
+
+/* テーブル */
+table {
+    width: 95%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+th {
+    background: #f7a726; /* 画像と同じ濃いオレンジ */
+    color: #fff;
+    padding: 12px;
+    font-size: 16px;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* 交互の背景色 */
+tr:nth-child(even) {
+    background: #fdf5e6; /* ほんのり薄いクリーム色 */
+}
+
+/* 総計部分の枠 */
+.summary {
+    width: 93%;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff9e6; /* 画像の薄黄色 */
+    border-left: 6px solid #f7a726;
+    border-radius: 6px;
+    font-size: 18px;
+}
+</style>
+
 </head>
 <body>
     <h2>総合売上一覧</h2>
