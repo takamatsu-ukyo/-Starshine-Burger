@@ -2,7 +2,7 @@
 session_start();
 require_once 'db-connect.php';
 
-$isLoggedIn = isset($_SESSION['user_id']);
+$isLoggedIn = isset($_SESSION['user']); // ログイン判定
 
 
 // カート追加（home.php から飛んできたとき用）
