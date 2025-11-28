@@ -152,7 +152,7 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
  <div class="header">
-  <img src=".img/SSBロゴ.png"> 
+  <img src="./img/SSBロゴ.png"> 
   <div class="logo-text">SSB</div>
 </div>
 
