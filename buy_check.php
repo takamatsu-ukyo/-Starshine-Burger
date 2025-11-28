@@ -110,7 +110,7 @@ $quantity = array_sum(array_column($cart, 'quantity'));
 </head>
 <body>
   <header>
-    <img src="images/ssb-burger.png" alt="SSBロゴ">
+    <img src="img/SSBロゴ.png" alt="SSBロゴ">
     <h1>SSB</h1>
   </header>
 
