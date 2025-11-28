@@ -20,11 +20,15 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理ホーム</title>
     <style>
-      <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+      .logo-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff8c00;
         }
       .search-container {
             padding: 20px;
@@ -148,15 +152,15 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
  <div class="header">
-  <img src="../img/SSBロゴ.png"> <!-- ロゴ -->
-  <h1>SSB</h1>
+  <img src="img/SSBロゴ.png"> 
+  <div class="logo-text">SSB</div>
 </div>
 
 <div class="search-area">
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="検索">
-    <button id="searchBtn" class="search-button">検索</button>
-  </div>
+  <form method="post" class="search-box">
+    <input type="text" name="keyword" id="searchInput" placeholder="検索" value="<?= htmlspecialchars($keyword) ?>">
+    <button type="submit" class="search-button">検索</button>
+  </form>
 </div>
 
 <div class="sales-btn-area">
@@ -181,7 +185,7 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
         echo '<div class="products-section">';
         echo '<h2>関連する商品</h2>';
-        echo '<div class="products-grid">';
+        echo '<div class="products">';
         
         foreach ($results as $item) {
             echo '<div class="product">';
