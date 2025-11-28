@@ -2,6 +2,9 @@
 session_start();
 require_once 'db-connect.php';
 
+$isLoggedIn = isset($_SESSION['user']); // ログイン判定
+
+
 // カート追加（home.php から飛んできたとき用）
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['food_id'])) {
     $food_id = (int)$_POST['food_id'];
@@ -97,17 +100,19 @@ if (isset($_GET['decrease'])) {
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f5f5f5;
         }
 
         .header {
             background: white;
-            padding: 15px 20px;
+            padding: 10px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .logo-section {
@@ -119,13 +124,14 @@ if (isset($_GET['decrease'])) {
         .logo-icon {
             width: 50px;
             height: 50px;
-            background: #ddd;
+            object-fit: contain;
         }
 
         .logo-text {
             font-size: 32px;
             font-weight: bold;
-            color: #ff8c42;
+            color: #ff8c00;
+            line-height: 50px;
         }
 
         .menu-icon {
@@ -139,25 +145,6 @@ if (isset($_GET['decrease'])) {
             background: white;
             display: flex;
             gap: 10px;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .search-btn {
-            background: #ff8c42;
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
         }
 
         .home-btn {
@@ -187,7 +174,6 @@ if (isset($_GET['decrease'])) {
         }
 
         .item-image {
-            width: 100%;
             height: 150px;
             background: #ddd;
             border-radius: 10px;
@@ -303,15 +289,9 @@ if (isset($_GET['decrease'])) {
 <body>
     <div class="header">
         <div class="logo-section">
-            <img src="" alt="Logo" class="logo-icon">
+            <img src="img/SSBロゴ.png" alt="Logo" class="logo-icon">
             <div class="logo-text">SSB</div>
         </div>
-        <img src="" alt="Menu" class="menu-icon">
-    </div>
-
-    <div class="search-section">
-        <input type="text" class="search-input" placeholder="">
-        <button class="search-btn">検索</button>
     </div>
 
     <a href="home.php?page=home" class="home-btn">ホーム</a>
@@ -325,7 +305,7 @@ if (isset($_GET['decrease'])) {
         <?php else: ?>
             <?php foreach ($cart as $item): ?>
                 <div class="cart-item">
-                    <img src="" alt="<?= htmlspecialchars($item['food_name']) ?>" class="item-image">
+                    <img src="image/<?= htmlspecialchars($item['food_id']) ?>.png" alt="<?= htmlspecialchars($item['food_name']) ?>" class="item-image">
                     <div class="item-info">
                         <div class="item-name"><?= htmlspecialchars($item['food_name']) ?></div>
                         <div class="item-price">¥<?= number_format($item['price']) ?></div>
@@ -350,7 +330,15 @@ if (isset($_GET['decrease'])) {
                     <span>商品数：</span>
                     <span><?= $totalItems ?>個</span>
                 </div>
-                <a href="buy_check.php?page=checkout" class="checkout-btn">購入</a>
+
+                <?php if ($isLoggedIn): ?>
+                    <!-- ログイン済みなら購入画面へ -->
+                    <a href="buy_check.php?page=checkout" class="checkout-btn">購入</a>
+                <?php else: ?>
+                    <!-- 未ログインならメッセージ表示 -->
+                    <p style="color:red; font-weight:bold;">購入にはログインが必要です</p>
+                    <a href="login.php" class="checkout-btn">ログイン画面へ</a>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     </div>

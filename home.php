@@ -21,7 +21,6 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ホーム画面</title>
     <style>
-      <style>
         * {
             margin: 0;
             padding: 0;
@@ -254,6 +253,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             cursor: pointer;
+            z-index: 9999; /* 最前面にする */
         }
 
         .cart-icon img {
@@ -363,6 +363,7 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         </style>
 </head>
 <body>
+    <iframe name="hiddenFrame" style="display:none;"></iframe>
   <header>
         <div class="logo-container">
             <div class="logo"><img  src=img/SSBロゴ.png alt="SSBロゴ" class="logo"></div>
@@ -377,17 +378,18 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
         <div class="dropdown-menu" id="dropdownMenu">
             <ul>
                 <li><a href="#" onclick="handleMenuClick('ユーザー情報')">・ユーザー情報</a></li>
+                <li><a href="#" onclick="handleMenuClick('ログイン')">・ログイン</a></li>
                 <li><a href="#" onclick="handleMenuClick('ログアウト')">・ログアウト</a></li>
             </ul>
         </div>
     </header>
     <?php
     echo '<div class="search-container">
-            <div class="search-box">'
+        <div class="search-box">';
     echo '<form method="POST" action="">';
     echo '<input type="text" name="keyword" id="searchInput" value="',htmlspecialchars($keyword),'" placeholder="商品名を入力">';
     echo '<button type="submit"  class="search-button">検索</button>';
-    echo '<div class="cart-icon"><a href="cart.php"><img src="img/カートのアイコン素材.png" alt="カートアイコン"></a></div>';
+    echo '<div class="cart-icon"><a href="cart.php"><img src="img/cart-icon.png" alt="カートアイコン"></a></div>';
     echo '</form>';
     echo '</div>
           </div>';
@@ -508,48 +510,63 @@ echo '</div>';
 ?>
 
    <script>
-        const menuButton = document.getElementById('menuButton');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        const overlay = document.getElementById('overlay');
-        const searchInput = document.getElementById('searchInput');
+    const menuButton = document.getElementById('menuButton');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const overlay = document.getElementById('overlay');
+    const searchInput = document.getElementById('searchInput');
 
-        // メニューボタンのクリックイベント
-        menuButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            menuButton.classList.toggle('active');
-            dropdownMenu.classList.toggle('show');
-            overlay.classList.toggle('show');
-        });
+    // ログイン状態を埋め込む（PHPからJSへ）
+    const isLoggedIn = <?= isset($_SESSION['user']) ? 'true' : 'false' ?>;
 
-        // オーバーレイクリックでメニューを閉じる
-        overlay.addEventListener('click', function() {
-            menuButton.classList.remove('active');
-            dropdownMenu.classList.remove('show');
-            overlay.classList.remove('show');
-        });
+    // メニューボタンのクリックイベント
+    menuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        menuButton.classList.toggle('active');
+        dropdownMenu.classList.toggle('show');
+        overlay.classList.toggle('show');
+    });
 
-        // メニュー項目のクリック処理
-        function handleMenuClick(action) {
-            alert(action + 'が選択されました');
-            menuButton.classList.remove('active');
-            dropdownMenu.classList.remove('show');
-            overlay.classList.remove('show');
-        }
+    // オーバーレイクリックでメニューを閉じる
+    overlay.addEventListener('click', function() {
+        menuButton.classList.remove('active');
+        dropdownMenu.classList.remove('show');
+        overlay.classList.remove('show');
+    });
 
-        // タグボタンで検索バーに単語を入力
-        function setSearchTag(tag) {
-            searchInput.value = tag;
-            searchInput.focus();
-        }
-
-        // ドキュメント全体のクリックでメニューを閉じる
-        document.addEventListener('click', function(e) {
-            if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                menuButton.classList.remove('active');
-                dropdownMenu.classList.remove('show');
-                overlay.classList.remove('show');
+    // メニュー項目のクリック処理
+    function handleMenuClick(action) {
+        if (action === 'ユーザー情報') {
+            if (isLoggedIn) {
+                window.location.href = 'user_update.php';
+            } else {
+                alert('ログインが必要です。ログインしてください。');
             }
-        });
+        } else if (action === 'ログイン') {
+            window.location.href = 'login.php';
+        } else if (action === 'ログアウト') {
+            window.location.href = 'logout.php';
+        }
+
+        menuButton.classList.remove('active');
+        dropdownMenu.classList.remove('show');
+        overlay.classList.remove('show');
+    }
+
+    // タグボタンで検索バーに単語を入力
+    function setSearchTag(tag) {
+        searchInput.value = tag;
+        searchInput.focus();
+    }
+
+    // ドキュメント全体のクリックでメニューを閉じる
+    document.addEventListener('click', function(e) {
+        if (!menuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            menuButton.classList.remove('active');
+            dropdownMenu.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+    });
     </script>
+
 </body>
 </html>

@@ -1,4 +1,18 @@
-<?php require 'db-connect.php';?>
+<?php 
+session_start();
+if (isset($_POST['keyword'])) {
+    $_SESSION['keyword'] = $_POST['keyword'];
+}
+
+require_once 'db-connect.php';
+
+// セッションからキーワードを取得（なければ空文字）
+$keyword = isset($_SESSION['keyword']) ? $_SESSION['keyword'] : '';
+
+$sql = "SELECT food_id, food_name FROM food_data";
+$stmt = $pdo->query($sql);
+$foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -153,17 +167,59 @@
 
 <p class="tag" id="searchTag"></p>
 
-<!--商品表示枠組み-->
-<div class="products">
+<?php
 
-  <div class="product">
-    <div class="product-title">
-      <a href="" class="icon-button" title="個別売上を見る">📅</a>
-    </div>
+    if ($keyword) {
+    $sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
+    $sql->execute(['%' . $keyword . '%']);
+    $results = $sql->fetchAll();
     
-    <img src="">
-  </div>
+    if (empty($results)) {
+        echo '<div class="products-section">';
+        echo '<p style="text-align: center;">該当する商品は見つかりませんでした。</p>';
+        echo '</div>';
+    } else {
+        echo '<div class="products-section">';
+        echo '<h2>関連する商品</h2>';
+        echo '<div class="products-grid">';
+        
+        foreach ($results as $item) {
+            echo '<div class="product">';
+            echo  '<div class="product-title">';
+            echo   '<a href="individual_sales.php?food_id=' . urlencode($item['food_id']) . '" class="icon-button" title="個別売上を見る">';
+            echo     htmlspecialchars($item['food_name']);
+            echo   '</a>';
+            echo  '</div>';
+            echo  '<a href="individual_sales.php?food_id=' . urlencode($item['food_id']) . '">';
+            echo   '<img src="image/' . htmlspecialchars($item['food_id']) . '.png" alt="' . htmlspecialchars($item['food_name']) . '" style="width:150px;height:auto;">';
+            echo  '</a>';
+            echo '</div>';
 
+        }
+        echo '</div>'; 
+        echo '</div>'; 
+
+    }
+}
+
+$flag = $pdo->query('SELECT * FROM food_data WHERE recommend_flag=1');
+$recommend_flag = $flag->fetchAll();
+?>
+<!--商品表示枠組み-->
+<h2>商品一覧</h2>
+<div class="products">
+  <?php foreach ($foods as $food): ?>
+    <div class="product">
+      <div class="product-title">
+        <a href="individual_sales.php?food_id=<?= urlencode($food['food_id']) ?>" class="icon-button" title="個別売上を見る">
+          <?= htmlspecialchars($food['food_name']) ?>
+        </a>
+      </div>
+      <a href="individual_sales.php?food_id=<?= urlencode($food['food_id']) ?>">
+        <img src="image/<?= htmlspecialchars($food['food_id']) ?>.png" alt="<?= htmlspecialchars($food['food_name']) ?>" style="width:150px;height:auto;">
+      </a>
+    </div>
+  <?php endforeach; ?>
 </div>
 
 <script>

@@ -2,21 +2,44 @@
 session_start();
 require 'db-connect.php';
 
-// 最新の購入（food_data）の1件を取得
-$sql = "SELECT * FROM food_data ORDER BY id DESC LIMIT 1";
-$stmt = $pdo->query($sql);
-$order = $stmt->fetch(PDO::FETCH_ASSOC);
+$cart = $_SESSION['cart'] ?? [];
 
-if (!$order) {
-    echo "注文が見つかりません。";
-    exit;
+if (empty($cart)) {
+  echo "注文が見つかりません。";
+  exit;
 }
 
-// 数量をセッションから取得（なければ1）
-$quantity = isset($_SESSION['quantity']) ? (int)$_SESSION['quantity'] : 1;
+$total = 0;
+$quantity = 0;
+$today = date('Y-m-d');
 
-// 合計金額を計算
-$total = (int)$order['price'] * $quantity;
+// 購入情報を proceeds_data に登録
+try {
+  $pdo->beginTransaction();
+
+  foreach ($cart as $item) {
+    if ($item['quantity'] > 0) {
+      $stmt = $pdo->prepare('INSERT INTO proceeds_data (food_id, purchase_date, number, proceeds) VALUES (:food_id, :purchase_date, :number, :proceeds)');
+      $stmt->execute([
+        ':food_id' => $item['food_id'],
+        ':purchase_date' => $today,
+        ':number' => $item['quantity'],
+        ':proceeds' => $item['price'] * $item['quantity']
+      ]);
+    }
+
+    $total += $item['price'] * $item['quantity'];
+    $quantity += $item['quantity'];
+  }
+
+  $pdo->commit();
+} catch (Exception $e) {
+  $pdo->rollBack();
+  echo "購入処理中にエラーが発生しました: " . htmlspecialchars($e->getMessage());
+  exit;
+}
+
+unset($_SESSION['cart'], $_SESSION['quantity']);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -24,12 +47,82 @@ $total = (int)$order['price'] * $quantity;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>購入完了画面</title>
+    <style>
+body{
+    font-family: "游ゴシック", "Yu Gothic", sans-serif;
+    margin: 0;
+    padding: 25px;
+    color: #333;
+}
+
+/* SSB ロゴ */
+h1 {
+    color: #ff8c2b;
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+/* メッセージ部分 */
+p:nth-of-type(1) {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+p:nth-of-type(2) {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+/* 見出し（ご注文内容 / 合計） */
+h3 {
+    border-bottom: 2px dotted #ffbb7a;
+    padding-bottom: 8px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+/* 注文リスト */
+p {
+    margin-left: 10px;
+    font-size: 15px;
+}
+
+/* 合計金額 */
+h3:nth-of-type(2) {
+    text-align: right;
+    margin-top: 30px;
+    font-size: 18px;
+}
+
+/* 合計の下に自然に表示される右寄せボタン */
+a {
+    display: block;
+    width: 140px;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: 10px;
+    padding: 12px 0;
+    background: #ff8c2b;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.15);
+}
+a:hover {
+    opacity: 0.9;
+}
+
+
+</style>
 </head>
 <body>
-
-  <!-- ② ×ボタン -->
-  <a href="home.php">×</a>
-
   <!-- ① ロゴ -->
   <h1>SSB</h1>
 
@@ -39,14 +132,20 @@ $total = (int)$order['price'] * $quantity;
 
   <!-- ④ 注文内容 -->
   <h3>ご注文内容</h3>
-  <p>
-    <?= htmlspecialchars($order['food_name']) ?>　
-    <?= $quantity ?>点　
-    ¥<?= number_format((int)$order['price'] * $quantity) ?>
-  </p>
+  <?php foreach ($cart as $item): ?>
+    <?php if ($item['quantity'] > 0): ?>
+      <img src="image/<?= htmlspecialchars($item['food_id']) ?>.png"
+        alt="<?= htmlspecialchars($item['food_name']) ?>"
+        width="100" height="100">
+      <p>
+        <?= htmlspecialchars($item['food_name']) ?> × <?= $item['quantity'] ?>個 ¥<?= number_format($item['price'] * $item['quantity']) ?>
+      </p>
+    <?php endif; ?>
+  <?php endforeach; ?>
 
   <!-- ⑤ 合計金額 -->
   <h3>合計：¥<?= number_format($total) ?></h3>
 
+  <a href="home.php">ホーム画面に戻る</a>
 </body>
 </html>
