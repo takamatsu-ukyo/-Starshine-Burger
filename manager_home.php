@@ -25,6 +25,11 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 0;
             box-sizing: border-box;
         }
+        .logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
       .logo-text {
             font-size: 32px;
             font-weight: bold;
@@ -152,7 +157,7 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
  <div class="header">
-  <img src="./img/SSBロゴ.png"> 
+  <div class="logo"><img  src=img/SSBロゴ.png alt="SSBロゴ" class="logo"></div>
   <div class="logo-text">SSB</div>
 </div>
 
