@@ -180,6 +180,10 @@ tr:nth-child(even) {
         <input type="date" name="to" id="to" value="<?= htmlspecialchars($_POST['to'] ?? '') ?>">
         <button type="submit">検索</button>
     </form>
+<div class="summary">
+    <h2>全商品の総合売上</h2>
+    <p>総売上金額：¥<?= number_format($summary['all_money'] ?? 0) ?></p>
+</div>
 
 <table>
     <tr>
@@ -203,11 +207,6 @@ tr:nth-child(even) {
         <?php endforeach; ?>
     <?php endif; ?>
 </table>
-
-<div class="summary">
-    <h2>全商品の総合売上</h2>
-    <p>総売上金額：¥<?= number_format($summary['all_money'] ?? 0) ?></p>
-</div>
 
 </body>
 </html>
