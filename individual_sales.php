@@ -144,6 +144,7 @@ $total_sales_all = $totalAll['total_sales_all'] ?? 0;
     <p>販売総数：<?= number_format($total_count_item) ?> 個</p>
     <p>総売上金額：¥<?= number_format($total_sales_item) ?></p>
 </div>
+
 <table>
     <tr>
         <th>購入日</th>
