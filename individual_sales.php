@@ -138,7 +138,12 @@ $total_sales_all = $totalAll['total_sales_all'] ?? 0;
   <input type="date" name="to" id="to" value="<?= htmlspecialchars($_GET['to'] ?? '') ?>">
   <button type="submit">絞り込む</button>
 </form>
-
+<!-- 売上 ▼ -->
+<div class="total-all-box">
+    <h2><?= htmlspecialchars($food_name) ?> の合計売上</h2>
+    <p>販売総数：<?= number_format($total_count_item) ?> 個</p>
+    <p>総売上金額：¥<?= number_format($total_sales_item) ?></p>
+</div>
 <table>
     <tr>
         <th>購入日</th>
@@ -158,14 +163,6 @@ $total_sales_all = $totalAll['total_sales_all'] ?? 0;
         <?php endforeach; ?>
     <?php endif; ?>
 </table>
-
-
-<!-- 売上 ▼ -->
-<div class="total-all-box">
-    <h2><?= htmlspecialchars($food_name) ?> の合計売上</h2>
-    <p>販売総数：<?= number_format($total_count_item) ?> 個</p>
-    <p>総売上金額：¥<?= number_format($total_sales_item) ?></p>
-</div>
 
 
 
