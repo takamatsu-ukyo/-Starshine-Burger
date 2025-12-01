@@ -158,10 +158,20 @@ tr:nth-child(even) {
     border-radius: 6px;
     font-size: 18px;
 }
+.back-btn{
+            display:inline-block;
+            padding:8px 15px;
+            background:#444;
+            color:#fff;
+            text-decoration:none;
+            border-radius:4px;
+            margin-bottom:10px;
+        }
 </style>
 
 </head>
 <body>
+    <a href="manager_home.php" class="back-btn">← 戻る</a>
     <h2>総合売上一覧</h2>
     <form method="post">
         <label for="from">開始日：</label>
