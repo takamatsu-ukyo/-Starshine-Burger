@@ -275,6 +275,13 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     font-weight: bold;
 }
 
+h3 {
+    text-align: center;
+    color: #ff8c00;
+    margin: 10px 0 5px 0;
+    font-weight: bold;
+}
+
 /* 商品グリッドコンテナ */
 .products-grid {
     display: grid;
@@ -359,6 +366,34 @@ $menu_open = isset($_SESSION['menu_open']) && $_SESSION['menu_open'];
     .products-grid {
         grid-template-columns: repeat(4, 1fr);
     }
+}
+.site-footer {
+  background-color: #f8f8f8; /* 背景色は好みで */
+  padding: 15px 20px;
+  border-top: 1px solid #ddd;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between; /* 左右に配置 */
+  align-items: center;
+}
+
+.footer-center {
+  flex: 1;
+  text-align: center;
+}
+
+.footer-left {
+  text-align: left;
+}
+
+.footer-logo {
+  height: 40px; /* ロゴサイズ調整 */
 }
         </style>
 </head>
@@ -457,6 +492,8 @@ $allResults = $sqlAll->fetchAll();
 
 $flag = $pdo->query('SELECT * FROM food_data WHERE recommend_flag=1');
 $recommend_flag = $flag->fetchAll();
+
+echo '<h3>商品をクリックすることでカートに追加できます</h3>';
 
 // おすすめ商品
 echo '<div class="products-section">';
@@ -567,6 +604,16 @@ echo '</div>';
         }
     });
     </script>
+
+<!-- フッター -->
+<footer class="site-footer">
+  <div class="footer-content">
+    <div class="footer-left">
+      <img src="img/SSBロゴ.png" alt="SSBロゴ" class="footer-logo">
+    </div>
+    <div class="footer-center">2025 StarShineBurger's.</div>
+  </div>
+</footer>
 
 </body>
 </html>
