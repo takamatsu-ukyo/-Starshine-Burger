@@ -153,6 +153,10 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
         #clearTag:hover {
             color: #000;
         }
+        a {
+            color: black;
+            text-decoration: none; /* 下線を消したい場合 */
+        }
         </style>
 </head>
 <body>
