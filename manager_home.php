@@ -30,15 +30,21 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 0;
             box-sizing: border-box;
         }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+        }
         .logo {
             width: 50px;
             height: 50px;
             object-fit: contain;
         }
-      .logo-text {
+        .logo-text {
             font-size: 32px;
             font-weight: bold;
             color: #ff8c00;
+            margin-left: 10px;
         }
       .search-container {
             padding: 20px;
@@ -75,6 +81,17 @@ $foods = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         .search-button:hover {
             background-color: #e67e00;
+        }
+        
+        .sales-btn-area {
+            margin-left: 20px; /* 総合売上ボタンの左余白 */
+            margin-top: 10px;
+        }
+
+        .products-section h2,
+        body > h2 { /* 商品一覧の見出し */
+            margin-left: 20px; /* 左余白 */
+            margin-top: 20px;
         }
 
         .products {
