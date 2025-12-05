@@ -455,6 +455,8 @@ h3 {
     $sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
     $sql->execute(['%' . $keyword . '%']);
     $results = $sql->fetchAll();
+
+    echo '<h3>商品をクリックすることでカートに追加できます</h3>';
     
     if (empty($results)) {
         echo '<div class="products-section">';
@@ -492,8 +494,6 @@ $allResults = $sqlAll->fetchAll();
 
 $flag = $pdo->query('SELECT * FROM food_data WHERE recommend_flag=1');
 $recommend_flag = $flag->fetchAll();
-
-echo '<h3>商品をクリックすることでカートに追加できます</h3>';
 
 // おすすめ商品
 echo '<div class="products-section">';
