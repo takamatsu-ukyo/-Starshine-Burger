@@ -451,12 +451,12 @@ h3 {
   <?php
     require_once 'db-connect.php';
 
+    echo '<h3>商品をクリックすることでカートに追加できます</h3>';
+
     if ($keyword) {
     $sql = $pdo->prepare('SELECT * FROM food_data WHERE food_name LIKE ?');
     $sql->execute(['%' . $keyword . '%']);
     $results = $sql->fetchAll();
-
-    echo '<h3>商品をクリックすることでカートに追加できます</h3>';
     
     if (empty($results)) {
         echo '<div class="products-section">';
