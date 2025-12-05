@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['login']) || $_SESSION['login'] !== true) {
+    header("Location: manager_login.php");
+    exit;
+}
+
 require 'db-connect.php';
 
 // food_id が指定されていなければエラー
