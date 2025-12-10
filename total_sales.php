@@ -40,7 +40,7 @@ $sql = "
     FROM proceeds_data pd
     JOIN food_data f ON pd.food_id = f.food_id
     $where
-    ORDER BY pd.purchase_date ASC
+    ORDER BY pd.purchase_date DESC
 ";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
